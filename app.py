@@ -4,8 +4,8 @@ from routes.authentication import Authentication
 app = Flask(__name__) 
 
 users = {}
-username = ""
-password = ""
+# username = ""
+# password = ""
 
 # Session key
 app.secret_key = '406-trades'
@@ -16,7 +16,7 @@ def index():
     if 'username' in session:
         return render_template('index.html', username=session['username'])
     else:
-        return redirect(url_for('login'))
+        return redirect(url_for('create'))
 
 # Login Page Form
 @app.route('/login', methods=['GET', 'POST'])
@@ -44,7 +44,7 @@ def create():
                 return render_template('create.html', error='Username already exists')
             else:
                 users[username] = password
-                return redirect(url_for('home'))
+                return redirect(url_for('login'))
         else:
             return render_template('create.html', error='Invalid Username or Password')
     else:
