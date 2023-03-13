@@ -1,4 +1,5 @@
 from flask import Flask, request, url_for, redirect, render_template, session
+from routes.authentication import Authentication
 
 app = Flask(__name__) 
 
@@ -37,11 +38,15 @@ def create():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if username in users:
-            return render_template('create.html', error='Username already exists')
+        auth = Authentication(username, password)
+        if auth.valid_create():
+            if username in users:
+                return render_template('create.html', error='Username already exists')
+            else:
+                users[username] = password
+                return redirect(url_for('home'))
         else:
-            users[username] = password
-            return redirect(url_for('home'))
+            return render_template('create.html', error='Invalid Username or Password')
     else:
         return render_template('create.html')
 
