@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+  </head>
+  <body>
+    <img src="{{ url_for('static', filename='assets/logo-small.jpeg') }}" align="middle" id="logo" />
+    <form id="form" method="post">
+      <input class="but" type="text" name="username" placeholder="Email"><br>
+      <input class="but" type="password" name="password" placeholder="Password"><br>
+      <input id="login-but" type="submit" value="Login"><br>
+      {% if error %}
+        <p id="error-msg">{{ error }}</p>
+      {% endif %}
+      <label>Don't have an account yet?</label><br>
+    </form>
+    <br>
+    <a id="create-but" href="{{ url_for('create') }}">Create Account</a>
+  </body>
+</html>
