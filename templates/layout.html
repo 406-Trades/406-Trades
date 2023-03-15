@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+    <title>{% block title %}406-Trades{% endblock %}</title>
+    <link rel="icon" href="{{ url_for('static', filename='/assets/logo-small.jpeg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/navbar.css') }}">
+
+</head>
+<body>
+    <nav class="navbar-container">
+        <img src="{{ url_for('static', filename='assets/logo-small.jpeg') }}" align="middle" id="navbar-logo" />
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="{{ url_for('market')}}">Market</a></li>
+            <li><a href="{{ url_for('faq')}}">FAQ</a></li>
+            <li><a href="{{ url_for('account')}}">Profile</a></li>
+        </ul>
+    </nav>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

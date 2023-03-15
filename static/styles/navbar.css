@@ -1,0 +1,45 @@
+body{
+    margin: 0;
+    height: 100vh;
+	width: 100vw;
+    background-color: rgb(255, 255, 255);
+}
+/* Logo in Navbar */
+#navbar-logo{
+    width:120px;
+    padding-left:30px;
+}
+.navbar-container{
+    width:100%;
+    height: 90px;
+    position:sticky;
+    margin: 0 auto;
+    margin-left:0px;
+    display: inline-block;
+    background-color: rgb(232, 230, 230);
+    box-shadow: 0px 8px 8px -2px rgba(103, 102, 102, 0.25);
+}
+/* Navbar Button container */
+.navbar-container >ul{
+    display: inline;
+    float:right;
+    padding-right:30px;
+}
+/* Navbar button options */
+.navbar-container >ul>li{
+    display: inline-block;
+    padding-right:50px;
+    padding-left:50px;
+}
+/* Hover colour change */
+.navbar-container >ul>li:hover{
+
+}
+/* Text in buttons */
+.navbar-container >ul>li>a{
+    text-decoration: none;
+    font-size:2rem;
+    line-height: 50px;
+    color:black;
+    font-family:Arial, Helvetica, sans-serif;
+}

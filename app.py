@@ -1,11 +1,20 @@
 from flask import Flask, request, url_for, redirect, render_template, session
+# Imported Classes
 from routes.authentication import Authentication
 
+# Blueprints for Flask routes
+from routes.transaction import increment_balance_blueprint
+
+# Configure App
 app = Flask(__name__) 
 
+# Declare blueprints
+app.register_blueprint(increment_balance_blueprint)
+
 users = {}
-# username = ""
-# password = ""
+
+investments = 1000.00
+balance = 5000.00
 
 # Session key
 app.secret_key = '406-trades'
@@ -14,7 +23,7 @@ app.secret_key = '406-trades'
 @app.route('/')
 def index():
     if 'username' in session:
-        return render_template('index.html', username=session['username'])
+        return redirect(url_for('home'))
     else:
         return redirect(url_for('create'))
 
@@ -38,7 +47,8 @@ def create():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        auth = Authentication(username, password)
+        passwordTwo = request.form['passwordTwo']
+        auth = Authentication(username, password, passwordTwo)
         if auth.valid_create():
             if username in users:
                 return render_template('create.html', error='Username already exists')
@@ -53,12 +63,17 @@ def create():
 # Home Page
 @app.route("/home") 
 def home():
-    return render_template('index.html')
+    return render_template('home.html', username=session['username'], i=investments, b=balance)
 
 # Stock Market Page
 @app.route("/market") 
 def market():
     return render_template('market.html')
+
+# FAQ Page
+@app.route("/faq") 
+def faq():
+    return render_template('faq.html')
 
 # Account Profile Page
 @app.route("/account") 
