@@ -1,20 +1,25 @@
 from flask import Flask, request, url_for, redirect, render_template, session
+import pymongo
+from pymongo import MongoClient
+
 # Imported Classes
-from routes.authentication import Authentication
+from classes.authentication import Authentication
+from classes.account import Account
+from classes.stock import Stock
 
 # Blueprints for Flask routes
-from routes.transaction import increment_balance_blueprint
+from routes.transaction import update_balance_blueprint
 
 # Configure App
 app = Flask(__name__) 
 
 # Declare blueprints
-app.register_blueprint(increment_balance_blueprint)
+app.register_blueprint(update_balance_blueprint)
 
-users = {}
-
-investments = 1000.00
-balance = 5000.00
+# Connect to MongoDB with Accounts
+cluster = MongoClient("mongodb+srv://Abhari:Abhari@cluster0.pqgawmw.mongodb.net/?retryWrites=true&w=majority")
+db = cluster["406-Trades"]
+accounts = db["Accounts"]
 
 # Session key
 app.secret_key = '406-trades'
@@ -33,7 +38,10 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if username in users and users[username] == password:
+        # Checks if username and password match up to an existing account
+        acc = accounts.find_one({'username': username})
+        if acc and acc["password"] == password:
+            # Adds user to the session, so they can re-login 
             session['username'] = username
             return redirect(url_for('home'))
         else:
@@ -48,12 +56,33 @@ def create():
         username = request.form['username']
         password = request.form['password']
         passwordTwo = request.form['passwordTwo']
+        # Creates an Account object
         auth = Authentication(username, password, passwordTwo)
+        # Validates credentials as 
         if auth.valid_create():
-            if username in users:
+            # Checks if user already exists
+            if accounts.find_one({'username': username}):
                 return render_template('create.html', error='Username already exists')
+            # Adds user to DB if they are unique
             else:
-                users[username] = password
+                # Template for New Account
+                acc = {
+                    "username" : username,
+                    "password" : password,
+                    "balance" : 2000,
+                    "investments" : 0,
+                    "stocks" : {
+                        "AAPL" : 1,
+                        "GGGL" : 5,
+                        "BBBY" : 3,
+                        "AAAA" : 3,
+                    },
+                    "saved" : ["AAPL", "OBAMA", "Mario", "Big Mac", "Ramen", "Abhari"]
+                }
+                accounts.insert_one(acc)
+
+                accountObj = Account(username)
+
                 return redirect(url_for('login'))
         else:
             return render_template('create.html', error='Invalid Username or Password')
@@ -63,22 +92,40 @@ def create():
 # Home Page
 @app.route("/home") 
 def home():
-    return render_template('home.html', username=session['username'], i=investments, b=balance)
+    # Checks if account is logged it or not
+    if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
+        return redirect(url_for('login'))
+    else:
+        username=session['username']
+        acc = accounts.find_one({'username': username})
+        return render_template('home.html', username=username, acc=acc, i=acc['investments'], b=acc['balance'], stocks=acc['stocks'], saved=acc['saved'])
 
 # Stock Market Page
 @app.route("/market") 
 def market():
-    return render_template('market.html')
+    # Checks if account is logged it or not
+    if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
+        return redirect(url_for('login'))
+    else:
+        return render_template('market.html')
 
 # FAQ Page
 @app.route("/faq") 
 def faq():
-    return render_template('faq.html')
+    # Checks if account is logged it or not
+    if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
+        return redirect(url_for('login'))
+    else:
+        return render_template('faq.html')
 
 # Account Profile Page
 @app.route("/account") 
 def account():
-    return render_template('account.html')
+    # Checks if account is logged it or not
+    if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
+        return redirect(url_for('login'))
+    else:
+        return render_template('account.html')
 
 # Removes Session When User Logs Out
 @app.route('/logout')

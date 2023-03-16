@@ -10,13 +10,27 @@
     max-width:1000px;
     border-radius:35px;
 }
+.portfolio-container, .owned-container{
+    display: inline-block;
+    border: 1px solid red;
+}
+/* Column 1 in Portfolio */
+.portfolio-container{
+    width: 50vw;
+    height:500px;
+}
+/* Column 2 in Portfolio */
+.owned-container{
+    width: 15vw;
+    height:500px;
+}
 /* Title */
-.home-container>h1{
+.portfolio-container>h1{
     font-size:6rem;
     margin-top:0px;
     margin-bottom:35px;
 }
-/*  */
+/* Sub Titles */
 #inv, #bal {
     font-size: 3rem;
     padding-top:25px;

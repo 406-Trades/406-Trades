@@ -8,23 +8,30 @@
 </head>
     <!-- Container for Account Financial Info -->
     <div class="home-container">
-        <h1>Portfolio</h1>
-        <div id="inv">Investments: ${{ i }}</div>
-        <div id="bal">Balance: ${{ b }}</div>
+        <div class="portfolio-container">
+            <h1>Portfolio</h1>
+            <div id="inv">Investments: ${{ i }}</div>
+            <div id="bal">Balance: ${{ b }}</div>
 
-        <!-- <form method="POST" action="{{ url_for('increment_balance.increment_balance') }}"> -->
-            <button type="submit">Increment Balance</button>
-            <button type="submit">Decrement Balance</button>
-        <!-- </form> -->
+            <form method="POST" action="{{ url_for('update_balance.update_balance', username=username) }}">
+                <input type="text" id="amount" name="amount" placeholder="$0.00" value=0><br>
+                <button type="submit" name="submit-button" value="Increment">Increment Balance</button>
+                <button type="submit" name="submit-button" value="Decrement">Decrement Balance</button>
+            </form>
+        </div>
+        <div class="owned-container">
+            {% for symbol, price in stocks.items() %}
+			<div class="owned-stock">{{ symbol }} - ${{ price }}</div>
+		    {% endfor %}
+        </div>
     </div>
 
     <!-- Container for Saved Stocks -->
     <div class="saved-container">
         <h1>Watchlist</h1>
         <div class="scrollbar">
-            <!-- Change to size of saved stocks -->
-            {% for i in range(20) %}
-			<div class="saved-stock">{{ i }}</div>
+            {% for symbol in saved %}
+			<div class="saved-stock">{{ symbol }}</div>
 		    {% endfor %}
         </div>
     </div>
