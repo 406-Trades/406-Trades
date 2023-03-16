@@ -12,17 +12,41 @@
 }
 .portfolio-container, .owned-container{
     display: inline-block;
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
 /* Column 1 in Portfolio */
 .portfolio-container{
     width: 50vw;
-    height:500px;
+    height: 500px;
 }
 /* Column 2 in Portfolio */
 .owned-container{
-    width: 15vw;
-    height:500px;
+    float: right; 
+    width: 18vw;
+    height: 500px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.356);
+    border-radius:35px;
+    font-size: 2rem;
+    line-height: 43px;
+    overflow-y: scroll;
+    /* padding-top:15px; */
+    padding-bottom:15px;
+}
+/* Scroll Bar Styling */
+.owned-container::-webkit-scrollbar {
+    height: 15px;
+    width: 20px;
+}
+.owned-container::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+.owned-container::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.678);
+    border-radius: 20px;
+}
+.owned-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.45);
 }
 /* Title */
 .portfolio-container>h1{

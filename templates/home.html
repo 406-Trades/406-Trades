@@ -20,9 +20,11 @@
             </form>
         </div>
         <div class="owned-container">
-            {% for symbol, price in stocks.items() %}
-			<div class="owned-stock">{{ symbol }} - ${{ price }}</div>
-		    {% endfor %}
+            <div class="owned-scrollbar">
+                {% for symbol, quantity in stocks.items() %}
+                <div class="owned-stock">{{ symbol }} - {{ quantity }}</div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 

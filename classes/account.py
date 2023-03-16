@@ -25,7 +25,6 @@ class Account:
         self.investments = self.calc_invest()
     
     # Balance Modifier Functions
-    # Replace 100 with amount once setup
     def deposit(self, amount):
         accounts.update_one({"username" : self.username}, {"$set" : {"balance" : self.balance + amount}})
         self.balance = self.acc['balance']

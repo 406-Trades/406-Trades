@@ -3,7 +3,7 @@
 <head>
     <title>{% block title %}406-Trades{% endblock %}</title>
     <link rel="icon" href="{{ url_for('static', filename='/assets/logo-small.jpeg') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/layout.css') }}">
 
 </head>
 <body>
@@ -18,5 +18,8 @@
     </nav>
     {% block content %}
     {% endblock %}
+    <footer>
+        © 406-Trades
+    </footer>
 </body>
 </html>
