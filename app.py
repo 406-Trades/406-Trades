@@ -73,7 +73,7 @@ def create():
                     "investments" : 0,
                     "stocks" : {
                         "AAPL" : 1,
-                        "GGGL" : 5,
+                        "GOOGL" : 5,
                         "BBBY" : 3,
                         "AAAA" : 3,
                         "AAasdA" : 3,
