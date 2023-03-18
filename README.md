@@ -13,4 +13,4 @@ Clone Repo:
 > git clone https://github.com/406-Trades/406-Trades.git
 
 Run App:
-> python app.py
+> py app.py
