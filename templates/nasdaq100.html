@@ -5,7 +5,7 @@
     {% for symbol, company in nasdaqData.items() %}
         <div class="nasdaq-stock-container">
             <div class="nasdaq-stock">
-            <h2>{{ symbol }} </h2> <h2>{{ company }}</h2>
+            <div id="symbol">{{ symbol }} </div> <div class="company">{{ company }}</div>
             </div>
             <form class="stock-form" method="POST" action="{{ url_for('buy_stock.buy_stock', username=username, symbol=symbol, nasdaqData=nasdaqData) }}">
                 <label>Shares: </label>

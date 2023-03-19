@@ -88,11 +88,18 @@
 .nasdaq-stock>h2{
     margin-right:25px;
 }
+#symbol{
+    width:180px;
+    font-size: 2rem;
+}
+#company{
+    font-size: 1.5rem;
+}
 /* Buttons to sell/buy stocks for each stock div */
 #buy-button{
 
 }
-#sell-button{
+#save-button{
 
 }
 #nasdaq-amount{
