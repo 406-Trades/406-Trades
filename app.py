@@ -1,6 +1,9 @@
 from flask import Flask, request, url_for, redirect, render_template, session
 import pymongo
 from pymongo import MongoClient
+import json
+import alpaca_trade_api as tradeapi
+import classes.config as config
 
 # Imported Classes
 from classes.authentication import Authentication
@@ -9,12 +12,18 @@ from classes.stock import Stock
 
 # Blueprints for Flask routes
 from routes.transaction import update_balance_blueprint
+from routes.transaction import buy_stock_blueprint
 
 # Configure App
 app = Flask(__name__) 
 
 # Declare blueprints
 app.register_blueprint(update_balance_blueprint)
+app.register_blueprint(buy_stock_blueprint)
+
+# # Connect to the Alpaca API
+# api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
+# headers = {'APCA-API-KEY-ID': config.API_KEY, 'APCA-API-SECRET-KEY': config.SECRET_KEY}
 
 # Connect to MongoDB with Accounts
 cluster = MongoClient("mongodb+srv://Abhari:Abhari@cluster0.pqgawmw.mongodb.net/?retryWrites=true&w=majority")
@@ -71,29 +80,8 @@ def create():
                     "password" : password,
                     "balance" : 2000,
                     "investments" : 0,
-                    "stocks" : {
-                        "AAPL" : 1,
-                        "GOOGL" : 5,
-                        "BBBY" : 3,
-                        "AAAA" : 3,
-                        "AAasdA" : 3,
-                        "AAasdAA" : 3,
-                        "AAaAA" : 3,
-                        "AA123AA" : 3,
-                        "A123AAA" : 3,
-                        "AasdAAA" : 3,
-                        "AAxcAA" : 3,
-                        "AAczsdAA" : 3,
-                        "AAasdAA" : 3,
-                        "AasdAAA" : 3,
-                        "AcAA1A" : 3,
-                        "AcAA23A" : 3,
-                        "AcA5AA" : 3,
-                        "AcA4AA" : 3,
-                        "AcA7AA" : 3,
-                        "Ac6AAA" : 3,
-                    },
-                    "saved" : ["AAPL", "OBAMA", "Mario", "Big Mac", "Ramen", "Abhari"]
+                    "stocks" : {},
+                    "saved" : []
                 }
                 accounts.insert_one(acc)
 
@@ -119,11 +107,14 @@ def home():
 # Stock Market Page
 @app.route("/market") 
 def market():
+    with open('./static/data/nasdaq100.json', 'r') as file:
+        nasdaqData = json.load(file)
+
     # Checks if account is logged it or not
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
         return redirect(url_for('login'))
     else:
-        return render_template('market.html')
+        return render_template('market.html', username=session['username'], nasdaqData=nasdaqData)
 
 # FAQ Page
 @app.route("/faq") 

@@ -7,10 +7,12 @@
 </head>
 <html>
     <body>
-        <h1>Stocks</h1>
         <!-- Choose Between Search div and Nasdaq div -->
-        <button id="show-search" onclick="marketShow()">Show first div</button>
-        <button id="show-nasdaq" onclick="nasdaqShow()">Show second div</button>
+        <div class="button-container">
+            <button id="show-search" onclick="marketShow()">Search</button>
+            <div class="line"></div>
+            <button id="show-nasdaq" onclick="nasdaqShow()">Top 100</button>
+        </div>
 
         <!-- Search Stock Page -->
         <div class="market-container">
@@ -33,25 +35,34 @@
 
         <!-- Nasdaq Top 100 Stocks Page -->
         <div class="nasdaq-container" style="display: none;">
-            Obama
+            {% include "nasdaq100.html" %}
         </div>
 
         <!-- Script for buttons -->
         <script type="text/javascript">
             const showFirstButton = document.getElementById("show-search");
             const showSecondButton = document.getElementById("show-nasdaq");
+            const marketDiv = document.getElementsByClassName("market-container")[0];
+            const nasdaqDiv = document.getElementsByClassName("nasdaq-container")[0];
+            const visibleDivId = localStorage.getItem('visibleDivId');
 
+            // Show The Correct Div, Despite Refreshing The Page
+            if (visibleDivId === 'nasdaqDiv') {
+            nasdaqShow();
+            } else {
+            marketShow();
+}
             // Shows First Div, Hides Second Div
             function marketShow() {
-                console.log("CACA");
-                document.getElementsByClassName("market-container")[0].style.display = "block";
-                document.getElementsByClassName("nasdaq-container")[0].style.display = "none";
+                marketDiv.style.display = "block";
+                nasdaqDiv.style.display = "none";
+                localStorage.setItem('visibleDivId', 'marketDiv');
             };
             // Shows Second Div, Hides First Div
             function nasdaqShow() {
-                console.log("CACA2");
-                document.getElementsByClassName("market-container")[0].style.display = "none";
-                document.getElementsByClassName("nasdaq-container")[0].style.display = "block";
+                marketDiv.style.display = "none";
+                nasdaqDiv.style.display = "block";
+                localStorage.setItem('visibleDivId', 'nasdaqDiv');
             };
         </script>
     </body>

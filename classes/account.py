@@ -68,13 +68,23 @@ class Account:
     def get_saved(self):
         return self.saved
     
-    # Setter Functions (make interact with DB)
+    # Setter Functions
+    # Change Username
     def update_username(self, newUsername):
         accounts.update_one({"username" : self.username}, {"$set" : {"username" : newUsername}})
         self.username = newUsername
-    
+    # Change Password
     def update_password(self, newPassword):
         if self.password != newPassword:
             accounts.update_one({"password" : self.password}, {"$set" : {"password" : newPassword}})
             self.password = newPassword
     
+    # Purchase Stock for given Account
+    def buy_stock(self, symbol, shares):
+        if shares > 0:
+            newDict = self.stocks
+            if symbol in self.stocks:
+                newDict[symbol] += shares
+            else:
+                newDict[symbol] = shares
+            accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
