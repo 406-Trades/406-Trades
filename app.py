@@ -152,7 +152,7 @@ def logout():
 # Admin Home Page
 @app.route('/admin')
 def admin():
-    allAccounts = accounts.find()
+    allAccounts = accounts.find({'username': {'$ne': 'admin'}})
     return render_template('admin/admin_accounts.html', username=session['username'], allAccounts=allAccounts)
 
 if __name__ == "__main__":
