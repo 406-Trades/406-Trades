@@ -1,11 +1,15 @@
 import pymongo
 from pymongo import MongoClient
-import alpaca_trade_api as tradeapi
+from alpaca.broker.client import BrokerClient
+from alpaca.broker.requests import ListAccountsRequest
+from alpaca.broker.enums import AccountEntities
+# import alpaca as tradeapi
 import requests
 import classes.config as config
 
 # Connect to the Alpaca API
-api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
+api = BrokerClient(config.API_KEY, config.SECRET_KEY)
+# tradeapi.REST(config.API_KEY, config.SECRET_KEY)
 headers = {'APCA-API-KEY-ID': config.API_KEY, 'APCA-API-SECRET-KEY': config.SECRET_KEY}
 
 # Accounts DB
