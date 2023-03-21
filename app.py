@@ -13,6 +13,8 @@ from classes.stock import Stock
 # Blueprints for Flask routes
 from routes.transaction import update_balance_blueprint
 from routes.transaction import buy_stock_blueprint
+from routes.transaction import sell_stock_blueprint
+from routes.admin_access import edit_account_blueprint
 
 # Configure App
 app = Flask(__name__) 
@@ -20,6 +22,8 @@ app = Flask(__name__)
 # Declare blueprints
 app.register_blueprint(update_balance_blueprint)
 app.register_blueprint(buy_stock_blueprint)
+app.register_blueprint(sell_stock_blueprint)
+app.register_blueprint(edit_account_blueprint)
 
 # # Connect to the Alpaca API
 # api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
@@ -52,7 +56,11 @@ def login():
         if acc and acc["password"] == password:
             # Adds user to the session, so they can re-login 
             session['username'] = username
-            return redirect(url_for('home'))
+             # Login for Admin
+            if username == 'admin' and password == 'admin':
+                return redirect(url_for('admin'))
+            else:
+                return redirect(url_for('home'))
         else:
             return render_template('login.html', error='Invalid username or password')
     else:
@@ -123,7 +131,7 @@ def faq():
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
         return redirect(url_for('login'))
     else:
-        return render_template('faq.html')
+        return render_template('faq.html', username=session['username'])
 
 # Account Profile Page
 @app.route("/account") 
@@ -132,13 +140,20 @@ def account():
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
         return redirect(url_for('login'))
     else:
-        return render_template('account.html')
+        return render_template('account.html', username=session['username'])
 
 # Removes Session When User Logs Out
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
+
+# Routes for Admin Pages
+# Admin Home Page
+@app.route('/admin')
+def admin():
+    allAccounts = accounts.find()
+    return render_template('admin/admin_accounts.html', username=session['username'], allAccounts=allAccounts)
 
 if __name__ == "__main__":
     app.run()

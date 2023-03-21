@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <h1>Admin Dashboard</h1>
+    <h1>Access Accounts & Stocks</h1>
+    <!-- Allows admin to edit / delete accounts -->
+    <table>
+        <!-- Column Titles -->
+        <tr>
+            <th>id</th>
+            <th>Email</th>
+            <th>Balance</th>
+            <th>Investments</th>
+            <th>Stocks</th>
+            <th>Watchlist</th>
+        </tr>
+        <!-- Rows of Account Data -->
+        {% for account in allAccounts %}
+            <tr>
+                <td>{{ account._id }}</td>
+                <form method="POST" action="{{ url_for('edit_account.edit_account', username=account.username, id=account._id) }}">
+                    <td><input type="text" name="username" value="{{ account.username }}"></td>
+                    <td><input type="text" name="balance" value="{{ account.balance }}"></td>
+                    <td><input type="text" name="investments" value="{{ account.investments }}"></td>
+                    <td><input type="text" name="stocks" value="{{ account.stocks }}"></td>
+                    <td><input type="text" name="saved" value="{{ account.saved }}"></td>
+                    <td><button type="submit" name="submit-button" value="Save">Save</button></td>
+                    <td><button type="submit" name="submit-button" value="Delete">Delete</button></td>
+                </form>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h1>Stock Authorization</h1>
+    <!-- Allows Admin to Authenticate Accounts and Stocks -->
+
+{% endblock %}

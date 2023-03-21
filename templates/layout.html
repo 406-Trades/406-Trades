@@ -10,6 +10,9 @@
     <nav class="navbar-container">
         <img src="{{ url_for('static', filename='assets/logo-small.jpeg') }}" align="middle" id="navbar-logo" />
         <ul>
+            {% if username == 'admin' %}
+                <li><a href="{{ url_for('admin')}}">Admin Access</a></li>
+            {% endif %}
             <li><a href="/">Home</a></li>
             <li><a href="{{ url_for('market')}}">Market</a></li>
             <li><a href="{{ url_for('faq')}}">FAQ</a></li>
