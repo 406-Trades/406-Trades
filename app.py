@@ -4,7 +4,7 @@ from pymongo import MongoClient
 import json
 import alpaca_trade_api as tradeapi
 import classes.config as config
-
+from classes.mypylib import log as pylog
 # Imported Classes
 from classes.authentication import Authentication
 from classes.account import Account
@@ -147,6 +147,15 @@ def account():
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
+@app.route('/del_account')
+def del_account():
+    # print(session)
+    # session.get('username', None)
+    # user = accounts.find({"username" : session.get('username', None)})
+    # pylog(user[0], "USER-PRE")
+    accounts.delete_one({"username" : session.get('username', None)})
+    return redirect(url_for('create'))
+
 
 # Routes for Admin Pages
 # Admin Home Page
