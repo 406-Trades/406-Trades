@@ -148,6 +148,13 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
+#Delete an account
+@app.route('/del_account')
+def del_account():
+    accounts.delete_one({'username': session.get('username', None)})
+    session.pop('username', None)
+    return redirect(url_for('login'))
+
 # Routes for Admin Pages
 # Admin Home Page
 @app.route('/admin')
