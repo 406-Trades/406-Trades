@@ -41,7 +41,12 @@ def buy_stock():
     symbol = request.args.get('symbol')
     shares = int(request.form['nasdaq-amount'])
     # Calculates Value of Stocks User Wishes to Buy 
-    amount = float(StockLatestQuoteRequest(symbol).price) * shares
+
+    multisymbol_request_params = StockLatestQuoteRequest(symbol_or_symbols=[symbol])
+    latest_multisymbol_quotes = api.get_stock_latest_quote(multisymbol_request_params)
+    latest_ask_price = latest_multisymbol_quotes[symbol].ask_price
+
+    amount = float(latest_ask_price) * shares
     if (shares > 0 and shares <= acc.get_balance()):
         # Updates Owned Stocks in Account Object and DB
         acc.buy_stock(symbol, shares)

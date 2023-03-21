@@ -43,7 +43,13 @@ class Account:
         for symbol, quantity in self.stocks.items():
             # Handles only valid stock symbols
             if requests.get(config.BASE_URL + f'/v2/assets/{symbol}', headers=headers).status_code == 200:
-                updatedInvest += float(StockLatestQuoteRequest(symbol).price) * float(quantity)
+                # updatedInvest += (float(api.get_stock_latest_quote(symbol).ask_price) * float(quantity))
+
+                multisymbol_request_params = StockLatestQuoteRequest(symbol_or_symbols=[symbol])
+                latest_multisymbol_quotes = api.get_stock_latest_quote(multisymbol_request_params)
+                latest_ask_price = latest_multisymbol_quotes[symbol].ask_price
+
+                updatedInvest += latest_ask_price
         
         print(updatedInvest)
         # Update Account in DB
