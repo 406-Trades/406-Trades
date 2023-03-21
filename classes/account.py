@@ -1,14 +1,14 @@
 import pymongo
 from pymongo import MongoClient
-from alpaca.broker.client import BrokerClient
-from alpaca.broker.requests import ListAccountsRequest
-from alpaca.broker.enums import AccountEntities
+from alpaca.broker import BrokerClient
+from alpaca.data.historical import StockHistoricalDataClient
+from alpaca.data.requests import StockLatestQuoteRequest
 # import alpaca as tradeapi
 import requests
 import classes.config as config
 
 # Connect to the Alpaca API
-api = BrokerClient(config.API_KEY, config.SECRET_KEY)
+api = StockHistoricalDataClient(config.API_KEY, config.SECRET_KEY)
 # tradeapi.REST(config.API_KEY, config.SECRET_KEY)
 headers = {'APCA-API-KEY-ID': config.API_KEY, 'APCA-API-SECRET-KEY': config.SECRET_KEY}
 
@@ -43,7 +43,7 @@ class Account:
         for symbol, quantity in self.stocks.items():
             # Handles only valid stock symbols
             if requests.get(config.BASE_URL + f'/v2/assets/{symbol}', headers=headers).status_code == 200:
-                updatedInvest += float(api.get_latest_trade(symbol).price) * float(quantity)
+                updatedInvest += float(StockLatestQuoteRequest(symbol).price) * float(quantity)
         
         print(updatedInvest)
         # Update Account in DB
@@ -61,7 +61,7 @@ class Account:
         return self.password
     
     def get_balance(self):
-        return self.balance
+        return round(self.balance, 2)
     
     def get_invest(self):
         return self.acc['investments']
@@ -71,6 +71,9 @@ class Account:
 
     def get_saved(self):
         return self.saved
+    
+    def get_shares(self, symbol):
+        return self.stocks[symbol]
     
     # Setter Functions
     # Change Username
@@ -92,3 +95,13 @@ class Account:
             else:
                 newDict[symbol] = shares
             accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
+
+    # Sell Stock for given Account
+    def sell_stock(self, symbol, shares):
+        if shares > 0:
+            if (symbol in self.stocks) and (shares < newDict[symbol]):
+                newDict[symbol] -= shares
+            if newDict[symbol] == 0:
+                accounts.delete_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
+            else:
+                accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})

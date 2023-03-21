@@ -2,7 +2,6 @@ from flask import Flask, request, url_for, redirect, render_template, session
 import pymongo
 from pymongo import MongoClient
 import json
-import alpaca as tradeapi
 import classes.config as config
 
 # Imported Classes

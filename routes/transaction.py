@@ -1,13 +1,13 @@
 from flask import Flask, Blueprint, render_template, redirect, url_for, request, session, jsonify
 from classes.account import Account
-from alpaca.broker.client import BrokerClient
-from alpaca.broker.requests import ListAccountsRequest
-from alpaca.broker.enums import AccountEntities
+from alpaca.broker import BrokerClient
+from alpaca.data.historical import StockHistoricalDataClient
+from alpaca.data.requests import StockLatestQuoteRequest
 import classes.config as config
 import json
 
 # Connect to the Alpaca API
-api = BrokerClient(config.API_KEY, config.SECRET_KEY)
+api = StockHistoricalDataClient(config.API_KEY, config.SECRET_KEY)
 headers = {'APCA-API-KEY-ID': config.API_KEY, 'APCA-API-SECRET-KEY': config.SECRET_KEY}
 
 # Blueprints
@@ -41,7 +41,7 @@ def buy_stock():
     symbol = request.args.get('symbol')
     shares = int(request.form['nasdaq-amount'])
     # Calculates Value of Stocks User Wishes to Buy 
-    amount = float(api.get_latest_trade(symbol).price) * shares
+    amount = float(StockLatestQuoteRequest(symbol).price) * shares
     if (shares > 0 and shares <= acc.get_balance()):
         # Updates Owned Stocks in Account Object and DB
         acc.buy_stock(symbol, shares)
@@ -57,5 +57,25 @@ def buy_stock():
 # Sell Stock
 @sell_stock_blueprint.route('/sell_stock', methods=['GET', 'POST'])
 def sell_stock():
+    # GET's User Data
+    username = request.args.get('username')
+    nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
+    acc = Account(username)
+    symbol = request.args.get('symbol')
+    shares = int(request.form['nasdaq-amount'])
+    # Calculates Value of Stocks User Wishes to Sell 
+    amount = float(StockLatestQuoteRequest(symbol).price) * shares
+    if (shares <= acc.get_balance()):
+        # Updates Owned Stocks in Account Object and DB
+        acc.sell_stock(symbol, shares)
+        acc.deposit(amount)
+        return redirect(url_for('market', username=username, nasdaqData=nasdaqData))
+    else:
+        # Error Handling
+        if (shares < 0):
+            return render_template('market.html', username=username, nasdaqData=nasdaqData, error='Invalid Stock Quantity', errorSymbol=symbol)
+        elif (shares > acc.get_shares(symbol)):
+            return render_template('market.html', username=username, nasdaqData=nasdaqData, error='Insufficient Shares', errorSymbol=symbol)
+
 
     return redirect(url_for('market'))
