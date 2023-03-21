@@ -88,3 +88,8 @@ class Account:
             else:
                 newDict[symbol] = shares
             accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
+
+    # Save Stock for given Account
+    def save_stock(self, symbol):
+        saved = self.saved
+        accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : saved.append(symbol)}})

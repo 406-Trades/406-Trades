@@ -25,7 +25,10 @@ def update_balance():
             acc.deposit(amount)
         # Remove money
         else:
-            acc.withdraw(amount)
+            if amount > acc.get_balance():
+                return render_template('home.html',username=username,b=acc.get_balance(),i=acc.get_invest(), amount=0, stocks=acc.get_stocks(), saved=acc.get_saved(), error='Exceeding Balance Funds')
+            else:
+                acc.withdraw(amount)
         return render_template('home.html',username=username,b=acc.get_balance(),i=acc.get_invest(), amount=0, stocks=acc.get_stocks(), saved=acc.get_saved())
     amount = 0
 
@@ -40,7 +43,7 @@ def buy_stock():
     shares = int(request.form['nasdaq-amount'])
     # Calculates Value of Stocks User Wishes to Buy 
     amount = float(api.get_latest_trade(symbol).price) * shares
-    if (shares > 0 and shares <= acc.get_balance()):
+    if (shares > 0 and amount <= acc.get_balance()):
         # Updates Owned Stocks in Account Object and DB
         acc.buy_stock(symbol, shares)
         acc.withdraw(amount)

@@ -17,6 +17,9 @@
                 <input type="text" id="amount" name="amount" placeholder="$0.00" value=0><br>
                 <button type="submit" name="submit-button" value="Increment">Increment Balance</button>
                 <button type="submit" name="submit-button" value="Decrement">Decrement Balance</button>
+                {% if error %}
+                    <p id="error-msg">{{ error }}</p>
+                {% endif %}
             </form>
         </div>
         <div class="owned-container">
