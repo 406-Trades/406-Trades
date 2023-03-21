@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from alpaca.broker import BrokerClient
 from alpaca.data.historical import StockHistoricalDataClient
 from alpaca.data.requests import StockLatestQuoteRequest
+from alpaca.data.timeframe import TimeFrame
 # import alpaca as tradeapi
 import requests
 import classes.config as config
@@ -26,7 +27,7 @@ class Account:
         self.balance = self.acc['balance']
         self.stocks = self.acc['stocks']
         self.saved = self.acc['saved']
-        self.investments = self.calc_invest()
+        self.investments = accounts.find_one({'username': username})['balance']
     
     # Balance Modifier Functions
     def deposit(self, amount):
@@ -45,16 +46,15 @@ class Account:
             if requests.get(config.BASE_URL + f'/v2/assets/{symbol}', headers=headers).status_code == 200:
                 # updatedInvest += (float(api.get_stock_latest_quote(symbol).ask_price) * float(quantity))
 
-                multisymbol_request_params = StockLatestQuoteRequest(symbol_or_symbols=[symbol])
-                latest_multisymbol_quotes = api.get_stock_latest_quote(multisymbol_request_params)
-                latest_ask_price = latest_multisymbol_quotes[symbol].ask_price
+                request_params = StockLatestQuoteRequest(symbol_or_symbols=[symbol], timeframe=TimeFrame.Day)
+                latest_ask_price = api.get_stock_latest_trade(request_params).get(symbol).price
 
-                updatedInvest += latest_ask_price
+                updatedInvest += (float(latest_ask_price) * float(quantity))
+                # updatedInvest += quantity
         
-        print(updatedInvest)
+        # app.logger.info(updatedInvest)
         # Update Account in DB
         accounts.update_one({"username" : self.username}, {"$set" : {"investments" : updatedInvest}})
-        self.investments = updatedInvest
 
     # Getter Functions
     def get_account(self):
@@ -70,7 +70,8 @@ class Account:
         return round(self.balance, 2)
     
     def get_invest(self):
-        return self.acc['investments']
+        self.calc_invest()
+        return round(self.acc['investments'], 2)
     
     def get_stocks(self):
         return self.stocks

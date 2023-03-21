@@ -101,7 +101,11 @@ def home():
     else:
         username=session['username']
         acc = accounts.find_one({'username': username})
-        return render_template('home.html', username=username, acc=acc, i=acc['investments'], b=acc['balance'], stocks=acc['stocks'], saved=acc['saved'])
+
+        user = Account(username)
+        user.get_invest()
+
+        return render_template('home.html', username=username, acc=acc, i=round(acc['investments'], 2), b=round(acc['balance'], 2), stocks=acc['stocks'], saved=acc['saved'])
 
 # Stock Market Page
 @app.route("/market") 
