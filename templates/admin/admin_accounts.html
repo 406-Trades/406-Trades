@@ -3,11 +3,12 @@
 {% block content %}
 <!doctype html>
 <html>
-    <div style="width: 60vw; position: absolute; left: 50%; transform: translate(-50%, 0%);">
+    <div style="width: 60vw; position: absolute; left: 50%; transform: translate(-50%, 0%); padding-top: 20px;">
 
         <h1>Admin Dashboard</h1>
-        <h1>Access Accounts & Stocks</h1>
         <!-- Allows admin to edit / delete accounts -->
+        <div style="text-align: center;">
+        <h2>Access Accounts & Stocks</h2>
         <table>
             <!-- Column Titles -->
             <tr>
@@ -34,22 +35,22 @@
                 </tr>
             {% endfor %}
         </table>
-
+        
         <!-- Allows Admin to Authenticate Accounts and Stocks -->
-        <h1>Stock Authentication</h1>
+        <h2>Stock Authentication</h2>
         <form id="stock-authentication">
             <input type="text" name="stock" id="stock" placeholder="Stock Name" required>
             <button type="submit" name="check-stock">Check</button>
         </form><br>
         <div id="stock-result-container"></div><br>
 
-        <h1>Account Authentication</h1>
+        <h2>Account Authentication</h2>
         <form id="account-authentication">
             <input type="text" name="account" id="account" placeholder="Account Email" required>
             <button type="submit" name="check-account">Check</button>
         </form><br>
         <div id="account-result-container"></div>
-
+        </div>
     </div>
 
     <script>
