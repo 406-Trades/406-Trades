@@ -85,27 +85,30 @@ def sell_stock():
 def save_stock():
     # GET's User Data
     username = request.args.get('username')
+    nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
+
     acc = Account(username)
     symbol = request.args.get('symbol')
 
     # Save stock to user's watchlist
     acc.save_stock(symbol)
 
-    return redirect(url_for('market'))
+    return render_template('market.html', username=username, nasdaqData=nasdaqData)
 
 # Search Stock
 @search_stock_blueprint.route('/search_stock', methods=['GET', 'POST'])
 def search_stock():
     # GET's User Data
-    # nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
+    nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
     username = request.args.get('username')
-    # symbol = request.form['stock_search']
+    symbol = request.form['stock_search']
 
-    symbol = 'AAPL'
+    # symbol = 'AAPL'
 
     get_stock = api.get_latest_trade(symbol)
+    print(get_stock)
 
-    return redirect(url_for('market'))
+    return render_template('market.html', username=username, nasdaqData=nasdaqData)
     # return render_template('market.html', name="bob")
 
     
