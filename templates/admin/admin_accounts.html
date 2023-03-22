@@ -1,42 +1,82 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <h1>Admin Dashboard</h1>
-    <h1>Access Accounts & Stocks</h1>
-    <!-- Allows admin to edit / delete accounts -->
-    <table>
-        <!-- Column Titles -->
-        <tr>
-            <th>id</th>
-            <th>Email</th>
-            <th>Balance</th>
-            <th>Investments</th>
-            <th>Stocks</th>
-            <th>Watchlist</th>
-        </tr>
-        <!-- Rows of Account Data -->
-        {% for account in allAccounts %}
+<!doctype html>
+<html>
+    <div style="width: 60vw; position: absolute; left: 50%; transform: translate(-50%, 0%); padding-top: 20px;">
+
+        <h1>Admin Dashboard</h1>
+        <!-- Allows admin to edit / delete accounts -->
+        <div style="text-align: center;">
+        <h2>Access Accounts & Stocks</h2>
+        <table>
+            <!-- Column Titles -->
             <tr>
-                <td>{{ account._id }}</td>
-                <form method="POST" action="{{ url_for('edit_account.edit_account', username=account.username, id=account._id) }}">
-                    <td><input type="text" name="username" value="{{ account.username }}"></td>
-                    <td><input type="text" name="balance" value="{{ account.balance }}"></td>
-                    <td><input type="text" name="investments" value="{{ account.investments }}"></td>
-                    <td><input type="text" name="stocks" value="{{ account.stocks }}"></td>
-                    <td><input type="text" name="saved" value="{{ account.saved }}"></td>
-                    <td><button type="submit" name="submit-button" value="Save">Save</button></td>
-                    <td><button type="submit" name="submit-button" value="Delete">Delete</button></td>
-                </form>
+                <th>id</th>
+                <th>Email</th>
+                <th>Balance</th>
+                <th>Investments</th>
+                <th>Stocks</th>
+                <th>Watchlist</th>
             </tr>
-        {% endfor %}
-    </table>
+            <!-- Rows of Account Data -->
+            {% for account in allAccounts %}
+                <tr>
+                    <td>{{ account._id }}</td>
+                    <form method="POST" action="{{ url_for('edit_account.edit_account', username=account.username, id=account._id) }}">
+                        <td><input type="text" name="username" value="{{ account.username }}"></td>
+                        <td><input type="text" name="balance" value="{{ account.balance }}"></td>
+                        <td><input type="text" name="investments" value="{{ account.investments }}"></td>
+                        <td><input type="text" name="stocks" value="{{ account.stocks }}"></td>
+                        <td><input type="text" name="saved" value="{{ account.saved }}"></td>
+                        <td><button type="submit" name="submit-button" value="Save">Save</button></td>
+                        <td><button type="submit" name="submit-button" value="Delete">Delete</button></td>
+                    </form>
+                </tr>
+            {% endfor %}
+        </table>
+        
+        <!-- Allows Admin to Authenticate Accounts and Stocks -->
+        <h2>Stock Authentication</h2>
+        <form id="stock-authentication">
+            <input type="text" name="stock" id="stock" placeholder="Stock Name" required>
+            <button type="submit" name="check-stock">Check</button>
+        </form><br>
+        <div id="stock-result-container"></div><br>
 
-    <h1>Stock Authentication</h1>
-    <!-- Allows Admin to Authenticate Accounts and Stocks -->
+        <h2>Account Authentication</h2>
+        <form id="account-authentication">
+            <input type="text" name="account" id="account" placeholder="Account Email" required>
+            <button type="submit" name="check-account">Check</button>
+        </form><br>
+        <div id="account-result-container"></div>
+        </div>
+    </div>
 
-
-
-    <h1>Account Authentication</h1>
-
-
+    <script>
+        document.getElementById("stock-authentication").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+            var stock = document.getElementById("stock").value; // Get the value of the name input field
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "{{ url_for('stock_authenticate.stock_authenticate') }}");
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+                document.getElementById("stock-result-container").innerHTML = xhr.responseText; // Update the content of the result container
+            };
+            xhr.send("stock=" + encodeURIComponent(stock));
+        });
+    
+        document.getElementById("account-authentication").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+            var account = document.getElementById("account").value; // Get the value of the name input field
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "{{ url_for('account_authenticate.account_authenticate') }}");
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+                document.getElementById("account-result-container").innerHTML = xhr.responseText; // Update the content of the result container
+            };
+            xhr.send("account=" + encodeURIComponent(account));
+        });
+    </script>
+</html>
 {% endblock %}

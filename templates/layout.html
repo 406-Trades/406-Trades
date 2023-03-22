@@ -4,14 +4,20 @@
     <title>{% block title %}406-Trades{% endblock %}</title>
     <link rel="icon" href="{{ url_for('static', filename='/assets/logo-small.jpeg') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/layout.css') }}">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar-container">
+        <a href="/">
         <img src="{{ url_for('static', filename='assets/logo-small.jpeg') }}" align="middle" id="navbar-logo" />
+        </a>
         <ul>
             {% if username == 'admin' %}
-                <li><a href="{{ url_for('admin')}}">Admin Access</a></li>
+                <li><a style="color:rgb(119, 119, 119);" href="{{ url_for('admin')}}">Admin Access</a></li>
             {% endif %}
             <li><a href="/">Home</a></li>
             <li><a href="{{ url_for('market')}}">Market</a></li>
