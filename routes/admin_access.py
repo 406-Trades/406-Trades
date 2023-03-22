@@ -36,10 +36,10 @@ def edit_account():
         elif request.form['submit-button'] == 'Save':
             accounts.update_one({'username': username}, {'$set': {
                 'username': request.form['username'],
-                'balance': request.form['balance'],
-                'investments': request.form['investments'],
-                'stocks': request.form['stocks'],
-                'saved': request.form['saved']
+                'balance': float(request.form['balance']),
+                'investments': float(request.form['investments']),
+                'stocks': json.loads(request.form['stocks'].replace("'", "\"")),
+                'saved': request.form['saved'].strip('][').split(', ')
             }})
         return render_template('admin/admin_accounts.html', username=session['username'], allAccounts=allAccounts)
 
