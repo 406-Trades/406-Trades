@@ -1,16 +1,11 @@
 import pymongo
 from pymongo import MongoClient
-from alpaca.broker import BrokerClient
-from alpaca.data.historical import StockHistoricalDataClient
-from alpaca.data.requests import StockLatestQuoteRequest
-from alpaca.data.timeframe import TimeFrame
-# import alpaca as tradeapi
+import alpaca_trade_api as tradeapi
 import requests
 import classes.config as config
 
 # Connect to the Alpaca API
-api = StockHistoricalDataClient(config.API_KEY, config.SECRET_KEY)
-# tradeapi.REST(config.API_KEY, config.SECRET_KEY)
+api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
 headers = {'APCA-API-KEY-ID': config.API_KEY, 'APCA-API-SECRET-KEY': config.SECRET_KEY}
 
 # Accounts DB
@@ -27,7 +22,7 @@ class Account:
         self.balance = self.acc['balance']
         self.stocks = self.acc['stocks']
         self.saved = self.acc['saved']
-        self.investments = accounts.find_one({'username': username})['balance']
+        self.investments = self.calc_invest()
     
     # Balance Modifier Functions
     def deposit(self, amount):
@@ -44,17 +39,13 @@ class Account:
         for symbol, quantity in self.stocks.items():
             # Handles only valid stock symbols
             if requests.get(config.BASE_URL + f'/v2/assets/{symbol}', headers=headers).status_code == 200:
-                # updatedInvest += (float(api.get_stock_latest_quote(symbol).ask_price) * float(quantity))
-
-                request_params = StockLatestQuoteRequest(symbol_or_symbols=[symbol], timeframe=TimeFrame.Day)
-                latest_ask_price = api.get_stock_latest_trade(request_params).get(symbol).price
-
-                updatedInvest += (float(latest_ask_price) * float(quantity))
-                # updatedInvest += quantity
+                updatedInvest += float(api.get_latest_trade(symbol).price) * float(quantity)
         
-        # app.logger.info(updatedInvest)
+        print(updatedInvest)
         # Update Account in DB
         accounts.update_one({"username" : self.username}, {"$set" : {"investments" : updatedInvest}})
+        self.investments = updatedInvest
+
 
     # Getter Functions
     def get_account(self):
@@ -106,9 +97,16 @@ class Account:
     # Sell Stock for given Account
     def sell_stock(self, symbol, shares):
         if shares > 0:
+            newDict = self.stocks
             if (symbol in self.stocks) and (shares < newDict[symbol]):
                 newDict[symbol] -= shares
             if newDict[symbol] == 0:
                 accounts.delete_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
             else:
                 accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
+
+
+    # Save Stock for given Account
+    def save_stock(self, symbol):
+        saved = self.saved
+        accounts.update_one({"username" : self.username}, {"$push" : {"saved" : symbol}})

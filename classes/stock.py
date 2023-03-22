@@ -1,19 +1,16 @@
 # Stock info class --> stock symbol / price
-from alpaca.broker import BrokerClient
-from alpaca.data.historical import StockHistoricalDataClient
-from alpaca.data.requests import StockLatestQuoteRequest
-# import alpaca_trade_api as tradeapi
+import alpaca_trade_api as tradeapi
 import classes.config as config
 import requests
 
 # Connect to the Alpaca API
-api = StockHistoricalDataClient(config.API_KEY, config.SECRET_KEY)
+api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
 headers = {'APCA-API-KEY-ID': config.API_KEY, 'APCA-API-SECRET-KEY': config.SECRET_KEY}
 
 class Stock:
     def __init__ (self, symbol):
         self.symbol = symbol
-        self.price = StockLatestQuoteRequest(symbol).price
+        self.price = api.get_latest_trade(symbol).price
     
     # Checks for valid stock name
     def verifyStock(self, symbol):

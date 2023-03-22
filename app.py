@@ -2,6 +2,7 @@ from flask import Flask, request, url_for, redirect, render_template, session
 import pymongo
 from pymongo import MongoClient
 import json
+import alpaca_trade_api as tradeapi
 import classes.config as config
 
 # Imported Classes
@@ -9,9 +10,16 @@ from classes.authentication import Authentication
 from classes.account import Account
 from classes.stock import Stock
 
+# Configure App
+app = Flask(__name__) 
+
 # Blueprints for Flask routes
 from routes.transaction import update_balance_blueprint
 from routes.transaction import buy_stock_blueprint
+from routes.transaction import sell_stock_blueprint
+from routes.transaction import save_stock_blueprint
+from routes.transaction import search_stock_blueprint
+from routes.admin_access import edit_account_blueprint
 
 # Configure App
 app = Flask(__name__) 
@@ -19,6 +27,10 @@ app = Flask(__name__)
 # Declare blueprints
 app.register_blueprint(update_balance_blueprint)
 app.register_blueprint(buy_stock_blueprint)
+app.register_blueprint(sell_stock_blueprint)
+app.register_blueprint(save_stock_blueprint)
+app.register_blueprint(search_stock_blueprint)
+app.register_blueprint(edit_account_blueprint)
 
 # # Connect to the Alpaca API
 # api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
