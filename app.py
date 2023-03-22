@@ -148,6 +148,7 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
+# Delete Account from DB
 @app.route('/del_account')
 def del_account():
     # print(session)
@@ -157,12 +158,12 @@ def del_account():
     accounts.delete_one({"username" : session.get('username', None)})
     return redirect(url_for('create'))
 
+# Update Customer Account Data
 @app.route('/account_settings', methods=['GET', 'POST'])
 def account_settings():
-
     if request.method == 'POST':
         username = request.form['username']
-        accounts.update_one({session.get('username', None)}, {"$set":{"username":username}})
+        accounts.update_one({"username" : session['username']}, {"$set" : {"username" : username}})
     return render_template('account_settings.html', username=session['username'])
 
 # Routes for Admin Pages
