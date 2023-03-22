@@ -15,6 +15,8 @@ from routes.transaction import update_balance_blueprint
 from routes.transaction import buy_stock_blueprint
 from routes.transaction import sell_stock_blueprint
 from routes.admin_access import edit_account_blueprint
+from routes.admin_access import stock_authenticate_blueprint
+from routes.admin_access import account_authenticate_blueprint
 
 # Configure App
 app = Flask(__name__) 
@@ -24,6 +26,8 @@ app.register_blueprint(update_balance_blueprint)
 app.register_blueprint(buy_stock_blueprint)
 app.register_blueprint(sell_stock_blueprint)
 app.register_blueprint(edit_account_blueprint)
+app.register_blueprint(stock_authenticate_blueprint)
+app.register_blueprint(account_authenticate_blueprint)
 
 # # Connect to the Alpaca API
 # api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
