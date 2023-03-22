@@ -1,0 +1,68 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+h1 {
+    margin-top: 0;
+}
+
+.logout {
+    float: right;
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    border: 2px solid #333;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+.logout:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+.delete {
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    border: 2px solid #333;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.delete:hover {
+    background-color: #FF0000;
+    color: #fff;
+}
+
+.settings {
+    float: right;
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    border: 2px solid #333;
+    margin-right: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+.settings:hover {
+    background-color: #333;
+    color: #fff;
+}

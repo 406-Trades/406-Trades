@@ -4,11 +4,22 @@
 <!doctype html>
 <html>
 <head> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/account.css') }}">
+	<title>Account</title>
 </head>
-    <body>
-        <h1>Account</h1>
-        <a href="/logout">Logout</a>
-        <a href="/del_account">Delete Account</a>
-    </body>
+<body>
+	<div class="container">
+		<a href="/logout" class="logout">Logout</a>
+        <a href="/account_settings" class="settings">Account Settings</a>
+		<h1>Account</h1>
+        <form id ='form' method="GET"> 
+            <p> Hello {{ username }}</p>
+            {% if error %}
+                    <p id="error-msg">{{ error }}</p>
+            {% endif %}    
+        </form>
+		<a href="/del_account" class="delete">Delete Account</a>
+	</div>
+</body>
 </html>
 {% endblock %}
