@@ -170,11 +170,10 @@ def account_settings():
         elif 'changePass' in request.form:
             oldPass = request.form['password']
             newPass = request.form['passwordTwo']
-            acc = accounts.find_one({'username': session['username']})
-            print(oldPass)
-            print(acc["password"])
-            if acc["password"] == oldPass:
-                accounts.update_one({"username" : session['username']}, {"$set" : {"password" : newPass}})
+            if Authentication.new_pass(newPass):
+                acc = accounts.find_one({'username': session['username']})
+                if acc["password"] == oldPass:
+                    accounts.update_one({"username" : session['username']}, {"$set" : {"password" : newPass}})
 
 
     return render_template('account_settings.html', username=session['username'])
