@@ -16,27 +16,9 @@
 
         <!-- Search Stock Page -->
         <div class="market-container">
-            <form method="POST">
-                <label for="stock_search">Search for stock:</label>
-                <input type="text" id="stock_search" name="stock_search">
-                
-                <label for="transaction_type">Transaction type:</label>
-                <select id="transaction_type" name="transaction_type">
-                    <option value="buy">Buy</option>
-                    <option value="sell">Sell</option>
-                </select>
-                
-                <label for="transaction_amount">Amount:</label>
-                <input type="input" id="transaction_amount" name="transaction_amount">
-                
-                <button type="submit">Submit</button>
-            </form>
+            {% include "stock_search.html" %}
         </div>
 
-        <!-- Nasdaq Top 100 Stocks Page -->
-        <div class="nasdaq-container" style="display: none;">
-            {% include "nasdaq100.html" %}
-        </div>
 
         <!-- Script for buttons -->
         <script type="text/javascript">

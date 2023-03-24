@@ -3,7 +3,6 @@ from pymongo import MongoClient
 import alpaca_trade_api as tradeapi
 import requests
 import classes.config as config
-
 # Connect to the Alpaca API
 api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
 headers = {'APCA-API-KEY-ID': config.API_KEY, 'APCA-API-SECRET-KEY': config.SECRET_KEY}
