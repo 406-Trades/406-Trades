@@ -18,6 +18,14 @@
                     <p id="error-msg">{{ error }}</p>
             {% endif %}    
         </form>
+        <div style="text-align: center;">
+            <h2>Generate Report</h2>
+            <form action = "/report" method="POST">
+                <p>
+                   <input type = "submit" value = "Generate">
+                </p>
+             </form>
+        </div>
 		<a href="/del_account" class="delete">Delete Account</a>
 	</div>
 </body>
