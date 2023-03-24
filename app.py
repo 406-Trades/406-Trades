@@ -164,6 +164,7 @@ def account_settings():
     if request.method == 'POST':
         username = request.form['username']
         accounts.update_one({"username" : session['username']}, {"$set" : {"username" : username}})
+        session['username'] = username
     return render_template('account_settings.html', username=session['username'])
 
 # Routes for Admin Pages
