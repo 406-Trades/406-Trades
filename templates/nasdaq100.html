@@ -12,9 +12,9 @@
                 <input type="text" id="nasdaq-amount" name="nasdaq-amount" maxlength="6" size="4" value=1>
                 <button type="submit" id="buy-button" name="buy-button" value="Buy">Buy</button><br>
                 <button type="submit" id="save-button" name="save-button" value="Save">Save</button>
-            {% if error and symbol == errorSymbol %}
-                <p id="error-msg">{{ error }}</p>
-            {% endif %}
+                {% if error and symbol == errorSymbol %}
+                    <p id="error-msg">{{ error }}</p>
+                {% endif %}
             </form>
         </div><br>
     {% endfor %}

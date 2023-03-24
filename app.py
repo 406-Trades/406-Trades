@@ -126,7 +126,7 @@ def market():
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
         return redirect(url_for('login'))
     else:
-        return render_template('market.html', username=session['username'], nasdaqData=nasdaqData)
+        return render_template('market.html', username=session['username'])
 
 # FAQ Page
 @app.route("/faq") 
@@ -172,5 +172,11 @@ def admin():
         return render_template('admin/admin_accounts.html', username=session['username'], allAccounts=allAccounts)
     else:
         return redirect(url_for('home', username=session['username']))
+    
+# Round floats to 2 Decimals --> $XXXX.XX
+@app.template_filter('price')
+def format_price(value):
+    return f"${value:,.2f}"
+
 if __name__ == "__main__":
     app.run()

@@ -3,13 +3,16 @@
 {% block content %}
 <!doctype html>
 <html>
-    <div style="width: 60vw; position: absolute; left: 50%; transform: translate(-50%, 0%); padding-top: 20px;">
-
-        <h1>Admin Dashboard</h1>
+    <head>
+        <title>Login</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin.css') }}">
+      </head>
+    <h1>Admin Dashboard</h1>
+    <div id="admin-container">
         <!-- Allows admin to edit / delete accounts -->
         <div style="text-align: center;">
         <h2>Access Accounts & Stocks</h2>
-        <table>
+        <table id="table" >
             <!-- Column Titles -->
             <tr>
                 <th>id</th>

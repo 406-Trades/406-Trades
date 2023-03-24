@@ -1,0 +1,23 @@
+#admin-container{
+    width: 90%;
+    margin: 0 auto;
+    background-color: #CECECE;
+    border-radius: 35px;
+    padding:20px;
+}
+table {
+    font-family: Arial, sans-serif;
+    color: #333;
+    border-collapse: collapse;
+    width: 60%;
+    margin: 0 auto;
+    background-color: white;
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+th {
+    background-color: #f2f2f2;
+}

@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Syncopate&display=swap" rel="stylesheet">
-</head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></head>
 <body>
     <nav class="navbar-container">
         <a href="/">
@@ -17,16 +17,18 @@
         </a>
         <ul>
             {% if username == 'admin' %}
-                <li><a style="color:rgb(119, 119, 119);" href="{{ url_for('admin')}}">Admin Access</a></li>
+                <li><a style="color:rgb(58, 57, 57);" href="{{ url_for('admin')}}"><i class="fa fa-gear"></i></a></li>
             {% endif %}
-            <li><a href="/">Home</a></li>
-            <li><a href="{{ url_for('market')}}">Market</a></li>
-            <li><a href="{{ url_for('faq')}}">FAQ</a></li>
-            <li><a href="{{ url_for('account')}}">Profile</a></li>
+            <li><a href="/"><i class="fa fa-home"></i></a></li>
+            <li><a href="{{ url_for('market')}}"><i class="fa fa-line-chart"></i></a></li>
+            <li><a href="{{ url_for('faq')}}"><i class="fa fa-info"></i></a></li>
+            <li><a href="{{ url_for('account')}}"><i class="fa fa-user"></i></a></li>
         </ul>
     </nav>
-    {% block content %}
-    {% endblock %}
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
     <footer>
         © 406-Trades
     </footer>
