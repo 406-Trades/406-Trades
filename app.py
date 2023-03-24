@@ -7,8 +7,8 @@ import classes.config as config
 
 # Imported Classes
 from classes.authentication import Authentication
-from classes.account import Account
 from classes.admin import Admin
+from classes.account import Account
 from classes.stock import Stock
 
 # Blueprints for Flask routes
