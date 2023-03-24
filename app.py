@@ -8,6 +8,7 @@ import classes.config as config
 # Imported Classes
 from classes.authentication import Authentication
 from classes.account import Account
+from classes.admin import Admin
 from classes.stock import Stock
 
 # Blueprints for Flask routes
@@ -62,6 +63,7 @@ def login():
             session['username'] = username
              # Login for Admin
             if username == 'admin' and password == 'admin':
+                adminObj = Admin(username)
                 return redirect(url_for('admin'))
             else:
                 return redirect(url_for('home'))
@@ -95,10 +97,9 @@ def create():
                     "stocks" : {},
                     "saved" : []
                 }
+                # Instantiate new Account Object and update DB with new account entry
                 accounts.insert_one(acc)
-
                 accountObj = Account(username)
-
                 return redirect(url_for('login'))
         else:
             return render_template('create.html', error='Invalid Username or Password')
@@ -119,9 +120,6 @@ def home():
 # Stock Market Page
 @app.route("/market") 
 def market():
-    with open('./static/data/nasdaq100.json', 'r') as file:
-        nasdaqData = json.load(file)
-
     # Checks if account is logged it or not
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
         return redirect(url_for('login'))

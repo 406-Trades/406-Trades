@@ -13,7 +13,7 @@ class Stock:
         self.price = api.get_latest_trade(symbol).price
     
     # Checks for valid stock name
-    def verifyStock(self, symbol):
+    def verify_stock(self, symbol):
         response = requests.get(config.BASE_URL + f'/v2/assets/{symbol}', headers=headers)
         if response.status_code == 200:
             return True
@@ -21,5 +21,9 @@ class Stock:
             return False
 
     # Returns stock price
-    def getPrice(self):
+    def get_price(self):
         return self.price
+    
+    # Returns stock name
+    def get_symbol(self):
+        return self.symbol
