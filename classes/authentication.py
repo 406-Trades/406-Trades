@@ -28,3 +28,7 @@ class Authentication:
     def new_pass(newPass):
         if  re.match(r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$", newPass):
             return True
+        
+    def new_user(username):
+        if re.match(r"[^@]+@[^@]+\.[^@]+", username):
+            return True

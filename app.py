@@ -164,8 +164,9 @@ def account_settings():
     if request.method == 'POST':
         if 'changeUsr' in request.form:
             username = request.form['username']
-            accounts.update_one({"username" : session['username']}, {"$set" : {"username" : username}})
-            session['username'] = username
+            if Authentication.new_user(username):
+                accounts.update_one({"username" : session['username']}, {"$set" : {"username" : username}})
+                session['username'] = username
 
         elif 'changePass' in request.form:
             oldPass = request.form['password']
