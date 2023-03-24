@@ -146,6 +146,7 @@ def account():
     else:
         return render_template('account.html', username=session['username'])
 
+# Generate Report for User in session
 @app.route("/report", methods=['GET', 'POST'])
 def report():
      # Checks if account is logged it or not
