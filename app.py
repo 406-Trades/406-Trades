@@ -128,7 +128,7 @@ def market():
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
         return redirect(url_for('login'))
     else:
-        return render_template('market.html', username=session['username'])
+        return render_template('market.html', username=session['username'], companies={})
 
 # FAQ Page
 @app.route("/faq") 

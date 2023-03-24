@@ -29,7 +29,7 @@ def update_balance():
         # Remove money
         else:
             acc.withdraw(amount)
-        return render_template('home.html',username=username,b=acc.get_balance(),i=acc.get_invest(), amount=0, stocks=acc.get_stocks(), saved=acc.get_saved())
+        return render_template('home.html',username=username,b=acc.get_balance(),i=acc.get_invest(), amount=0, stocks=acc.get_stocks(), saved=acc.get_saved(), companies={})
     amount = 0
 
 # Purchase Stock
@@ -39,44 +39,56 @@ def buy_stock():
     username = request.args.get('username')
     acc = Account(username)
     symbol = request.args.get('symbol')
-    shares = int(request.args.get('nasdaqAmount'))
+    source = request.args.get('from')
+    if source == 'filter':
+        shares = int(request.form['filter-amount'])
+    elif source == 'search':
+        shares = int(request.form['search-amount'])
+    else:
+        shares = 0
     # Calculates Value of Stocks User Wishes to Buy 
     amount = float(api.get_latest_trade(symbol).price) * shares
     if (shares > 0 and shares <= acc.get_balance()):
         # Updates Owned Stocks in Account Object and DB
         acc.buy_stock(symbol, shares)
         acc.withdraw(amount)
-        return redirect(url_for('market', username=username, symbol=symbol))
+        return redirect(url_for('market', username=username, symbol=symbol, companies={}))
     else:
         # Error Handling
         if (shares < 0):
-            return render_template('market.html', username=username, error='Invalid Stock Quantity', errorSymbol=symbol)
+            return render_template('market.html', username=username, error='Invalid Stock Quantity', errorSymbol=symbol, companies={})
         elif (amount > acc.get_balance()):
-            return render_template('market.html', username=username, error='Insufficient Balance', errorSymbol=symbol)
+            return render_template('market.html', username=username, error='Insufficient Balance', errorSymbol=symbol, companies={})
 
 # Sell Stock
 @sell_stock_blueprint.route('/sell_stock', methods=['GET', 'POST'])
 def sell_stock():
     # GET's User Data
     username = request.args.get('username')
-    # nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
     acc = Account(username)
     symbol = request.args.get('symbol')
-    # shares = request.args.get('nasdaq-amount')
-    shares = 1
+
+    source = request.args.get('from')
+    if source == 'filter':
+        shares = int(request.form['filter-amount'])
+    elif source == 'search':
+        shares = int(request.form['search-amount'])
+    else:
+        shares = 0
     # Calculates Value of Stocks User Wishes to Sell 
     amount = float(api.get_latest_trade(symbol).price) * shares
-    if (shares <= acc.get_balance()):
+    print(acc.get_shares(symbol))
+    if (shares <= acc.get_shares(symbol)):
         # Updates Owned Stocks in Account Object and DB
         acc.sell_stock(symbol, shares)
         acc.deposit(amount)
-        return redirect(url_for('market', username=username, symbol=symbol))
+        return redirect(url_for('market', username=username, symbol=symbol, companies={}))
     else:
         # Error Handling
         if (shares < 0):
-            return render_template('market.html', username=username, error='Invalid Stock Quantity', errorSymbol=symbol)
+            return render_template('market.html', username=username, error='Invalid Stock Quantity', errorSymbol=symbol, companies={})
         elif (shares > acc.get_shares(symbol)):
-            return render_template('market.html', username=username, error='Insufficient Shares', errorSymbol=symbol)
+            return render_template('market.html', username=username, error='Insufficient Shares', errorSymbol=symbol, companies={})
 
 
     return redirect(url_for('market'))
@@ -86,7 +98,6 @@ def sell_stock():
 def save_stock():
     # GET's User Data
     username = request.args.get('username')
-    # nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
 
     acc = Account(username)
     symbol = request.args.get('symbol')
@@ -94,13 +105,12 @@ def save_stock():
     # Save stock to user's watchlist
     acc.save_stock(symbol)
 
-    return render_template('market.html', username=username, symbol=symbol)
+    return render_template('market.html', username=username, symbol=symbol, companies={})
 
 # Search Stock
 @search_stock_blueprint.route('/search_stock', methods=['GET', 'POST'])
 def search_stock():
     # GET's User Data
-    # nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
     username = request.args.get('username')
     symbol = request.form['stock_search'].upper()
 
@@ -109,10 +119,10 @@ def search_stock():
         get_stock = api.get_latest_trade(symbol.upper()).price
         stock_name = api.get_asset(symbol).name
 
-        return render_template('market.html', username=username, showStock="True", symbol=symbol.upper(), price=get_stock, name=stock_name)
+        return render_template('market.html', username=username, showStock="True", symbol=symbol.upper(), price=get_stock, name=stock_name, companies={})
     # Otherwise, an error is outputted
     except:
-        return render_template('market.html', username=username, error='Stock not found', errorSymbol=symbol)
+        return render_template('market.html', username=username, error='Stock not found', errorSymbol=symbol, companies={})
 
 # Filter Stock
 @filter_stock_blueprint.route('/filter_stock', methods=['GET', 'POST'])
@@ -122,13 +132,13 @@ def filter_stock():
     exchange = request.args.get('exchange')
     active_assets = api.list_assets(status="active")
     matching_stocks = {}
-    
-    if exchange == "All":
-        nasdaq_assets = active_assets
-    else:
-        nasdaq_assets = [a for a in active_assets if a.exchange == exchange]
 
-    for asset in nasdaq_assets[:50]:
+    if exchange == "Any":
+        assets = active_assets
+    else:
+        assets = [a for a in active_assets if a.exchange == exchange]
+
+    for asset in assets[:50]:
         try:
             price = api.get_latest_trade(asset.symbol).price
             matching_stocks[asset.symbol] = [asset.name, price]
@@ -136,4 +146,4 @@ def filter_stock():
             continue
 
 
-    return render_template('market.html', username=username, stocks=matching_stocks)
+    return render_template('market.html', username=username, companies=matching_stocks)

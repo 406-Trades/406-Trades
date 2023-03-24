@@ -71,7 +71,10 @@ class Account:
         return self.saved
     
     def get_shares(self, symbol):
-        return self.stocks[symbol]
+        try:
+            return self.stocks[symbol]
+        except:
+            return 0
     
     # Setter Functions
     # Change Username
