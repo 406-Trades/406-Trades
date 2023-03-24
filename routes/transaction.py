@@ -23,7 +23,7 @@ def update_balance():
     if(amount.isdigit()):
         amount = float(amount)
     else:
-        return render_template('home.html',username=username,b=acc.get_balance(),i=acc.get_invest(), amount=0, stocks=acc.get_stocks(), saved=acc.get_saved(), error='Invalid Input')
+        return render_template('home.html',username=username,b=acc.get_balance(),i=acc.get_invest(), amount=0, stocks=acc.get_stocks(), saved=acc.get_saved(), error='Invalid Balance Input')
     if amount > 0:
         b = float(request.args.get('b'))
         # Add money
@@ -42,7 +42,6 @@ def update_balance():
 # Purchase Stock
 @buy_stock_blueprint.route('/buy_stock', methods=['GET', 'POST'])
 def buy_stock():
-    print("dasdasdasd")
     # GET's User Data
     username = request.args.get('username')
     acc = Account(username)

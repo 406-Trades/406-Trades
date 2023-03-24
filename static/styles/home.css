@@ -61,6 +61,12 @@
 #dec-button{
     background-color: #f93535; 
 }
+#inc-button:hover{
+    background-color: #75f67a; 
+}
+#dec-button:hover{
+    background-color: #f66d6d; 
+}
 /* Column 2 in Portfolio */
 .owned-container{
     float: right;
@@ -164,7 +170,7 @@
     font-size:2rem;
 }
 #sub-title{
-    font-size: 1rem;
+    font-size: 1.25rem;
 }
 #buy-amount{
     box-sizing: border-box; 
@@ -177,4 +183,21 @@
     background-color: white; 
     background-image: none;
     transition: border-color 0.3s ease-in-out;
+}
+.buy-button{
+    border: none;
+    color: black; 
+    padding: 8px 16px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 1rem;
+    margin: 4px 2px; 
+    cursor: pointer; 
+    border-radius: 8px; 
+    margin-top:5px;
+    background-color: rgb(92, 186, 252);
+}
+.buy-button:hover{
+    background-color: rgb(163, 214, 251);
 }

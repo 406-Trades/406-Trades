@@ -12,6 +12,9 @@ body{
     width:120px;
     padding-left:30px;
 }
+#navbar-logo:hover{
+    transform: rotate(-6deg);
+}
 .navbar-container{
     width:100%;
     height: 90px;
@@ -37,7 +40,7 @@ body{
 }
 /* Hover colour change */
 .navbar-container >ul>li:hover{
-
+    transform: scale(1.10);
 }
 /* Text in buttons */
 .navbar-container >ul>li>a{
