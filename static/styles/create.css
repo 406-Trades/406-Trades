@@ -2,6 +2,11 @@ body{
     background: #FFFFFF;
     width: 400px; 
     margin: 0 auto;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
     text-align: center; 
     font-family: 'Inter';
     font-style: normal;

@@ -3,7 +3,6 @@ from pymongo import MongoClient
 import alpaca_trade_api as tradeapi
 import requests
 import classes.config as config
-
 # Connect to the Alpaca API
 api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
 headers = {'APCA-API-KEY-ID': config.API_KEY, 'APCA-API-SECRET-KEY': config.SECRET_KEY}
@@ -68,13 +67,28 @@ class Account:
     def get_saved(self):
         return self.saved
     
-    # Setter Functions (make interact with DB)
+    # Setter Functions
+    # Change Username
     def update_username(self, newUsername):
         accounts.update_one({"username" : self.username}, {"$set" : {"username" : newUsername}})
         self.username = newUsername
-    
+    # Change Password
     def update_password(self, newPassword):
         if self.password != newPassword:
             accounts.update_one({"password" : self.password}, {"$set" : {"password" : newPassword}})
             self.password = newPassword
     
+    # Purchase Stock for given Account
+    def buy_stock(self, symbol, shares):
+        if shares > 0:
+            newDict = self.stocks
+            if symbol in self.stocks:
+                newDict[symbol] += shares
+            else:
+                newDict[symbol] = shares
+            accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
+
+    # Save Stock for given Account
+    def save_stock(self, symbol):
+        saved = self.saved
+        accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : saved.append(symbol)}})

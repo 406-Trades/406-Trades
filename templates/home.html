@@ -10,16 +10,27 @@
     <div class="home-container">
         <div class="portfolio-container">
             <h1>Portfolio</h1>
-            <div id="inv">Investments: ${{ i }}</div>
-            <div id="bal">Balance: ${{ b }}</div>
+            <div class="acc-finances">
+                <div id="val">Account Value:<br><div class="value-acc">{{ (i+b)|price  }}</div></div>
+                <div class="inv-bal">
+                    <div id="inv">Investments:<br><div class="value">{{ i|price  }}</div></div>
+                    <div id="bal">Balance:<br><div class="value">{{ b|price }}</div></div>
+                </div>
+            </div>
 
-            <form method="POST" action="{{ url_for('update_balance.update_balance', username=username) }}">
-                <input type="text" id="amount" name="amount" placeholder="$0.00" value=0><br>
-                <button type="submit" name="submit-button" value="Increment">Increment Balance</button>
-                <button type="submit" name="submit-button" value="Decrement">Decrement Balance</button>
+            <form class="form" method="POST" action="{{ url_for('update_balance.update_balance', username=username, b=b) }}">
+                <label id="form-subtitle">Update Balance:</label>
+                <input class="form-input" type="text" id="amount" name="amount" placeholder="$0.00" size="6"><br>
+                <button id="inc-button" type="submit" name="submit-button" value="Increment">Increment Balance</button>
+                <button id="dec-button" type="submit" name="submit-button" value="Decrement">Decrement Balance</button>
+                {% if error == 'Exceeding Balance Funds' and error == 'Invalid Balance Input' %}
+                    <p id="error-msg" style="color:red">{{ error }}</p>
+                {% endif %}
             </form>
         </div>
+        <!-- Container for Owned/Bought Stocks -->
         <div class="owned-container">
+            <p id="owned-title">Holdings</p>
             <div class="owned-scrollbar">
                 {% for symbol, quantity in stocks.items() %}
                 <div class="owned-stock">{{ symbol }} - {{ quantity }}</div>
@@ -33,9 +44,20 @@
         <h1>Watchlist</h1>
         <div class="scrollbar">
             {% for symbol in saved %}
-			<div class="saved-stock">{{ symbol }}</div>
-		    {% endfor %}
+            <div class="saved-stock">
+                <div id="symbol">{{ symbol }} </div>
+                <form class="stock-form" method="POST" action="{{ url_for('buy_stock.buy_stock', username=username, symbol=symbol) }}">
+                    <label id="sub-title">Shares: </label>
+                    <input type="text" id="buy-amount" name="buy-amount" maxlength="6" size="4" value=1>
+                    <button type="submit" id="{{ symbol }}" class="buy-button" name="buy-button" value="Buy">Buy</button>
+                    {% if error and symbol == errorSymbol %}
+                        <style>#{{ symbol }} {border: 1px solid red;}</style>
+                    {% endif %}
+                </form>
+            </div>
+            {% endfor %}
         </div>
     </div>
+    <br><br>
 </html>
 {% endblock %}  

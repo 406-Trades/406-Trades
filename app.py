@@ -1,20 +1,36 @@
 from flask import Flask, request, url_for, redirect, render_template, session
 import pymongo
 from pymongo import MongoClient
+import json
+import alpaca_trade_api as tradeapi
+import classes.config as config
 
 # Imported Classes
 from classes.authentication import Authentication
+from classes.admin import Admin
 from classes.account import Account
 from classes.stock import Stock
 
 # Blueprints for Flask routes
-from routes.transaction import update_balance_blueprint
+from routes.transaction import Transaction
+from routes.admin_access import Admin_Access
 
 # Configure App
 app = Flask(__name__) 
 
 # Declare blueprints
-app.register_blueprint(update_balance_blueprint)
+transaction = Transaction()
+app.register_blueprint(transaction.update_balance_blueprint)
+app.register_blueprint(transaction.buy_stock_blueprint)
+app.register_blueprint(transaction.sell_stock_blueprint)
+admin_access = Admin_Access()
+app.register_blueprint(admin_access.edit_account_blueprint)
+app.register_blueprint(admin_access.stock_authenticate_blueprint)
+app.register_blueprint(admin_access.account_authenticate_blueprint)
+
+# # Connect to the Alpaca API
+# api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
+# headers = {'APCA-API-KEY-ID': config.API_KEY, 'APCA-API-SECRET-KEY': config.SECRET_KEY}
 
 # Connect to MongoDB with Accounts
 cluster = MongoClient("mongodb+srv://Abhari:Abhari@cluster0.pqgawmw.mongodb.net/?retryWrites=true&w=majority")
@@ -43,7 +59,12 @@ def login():
         if acc and acc["password"] == password:
             # Adds user to the session, so they can re-login 
             session['username'] = username
-            return redirect(url_for('home'))
+             # Login for Admin
+            if username == 'admin' and password == 'admin':
+                adminObj = Admin(username)
+                return redirect(url_for('admin'))
+            else:
+                return redirect(url_for('home'))
         else:
             return render_template('login.html', error='Invalid username or password')
     else:
@@ -71,34 +92,12 @@ def create():
                     "password" : password,
                     "balance" : 2000,
                     "investments" : 0,
-                    "stocks" : {
-                        "AAPL" : 1,
-                        "GOOGL" : 5,
-                        "BBBY" : 3,
-                        "AAAA" : 3,
-                        "AAasdA" : 3,
-                        "AAasdAA" : 3,
-                        "AAaAA" : 3,
-                        "AA123AA" : 3,
-                        "A123AAA" : 3,
-                        "AasdAAA" : 3,
-                        "AAxcAA" : 3,
-                        "AAczsdAA" : 3,
-                        "AAasdAA" : 3,
-                        "AasdAAA" : 3,
-                        "AcAA1A" : 3,
-                        "AcAA23A" : 3,
-                        "AcA5AA" : 3,
-                        "AcA4AA" : 3,
-                        "AcA7AA" : 3,
-                        "Ac6AAA" : 3,
-                    },
-                    "saved" : ["AAPL", "OBAMA", "Mario", "Big Mac", "Ramen", "Abhari"]
+                    "stocks" : {},
+                    "saved" : []
                 }
+                # Instantiate new Account Object and update DB with new account entry
                 accounts.insert_one(acc)
-
                 accountObj = Account(username)
-
                 return redirect(url_for('login'))
         else:
             return render_template('create.html', error='Invalid Username or Password')
@@ -123,7 +122,7 @@ def market():
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
         return redirect(url_for('login'))
     else:
-        return render_template('market.html')
+        return render_template('market.html', username=session['username'])
 
 # FAQ Page
 @app.route("/faq") 
@@ -132,7 +131,7 @@ def faq():
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
         return redirect(url_for('login'))
     else:
-        return render_template('faq.html')
+        return render_template('faq.html', username=session['username'])
 
 # Account Profile Page
 @app.route("/account") 
@@ -141,13 +140,40 @@ def account():
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
         return redirect(url_for('login'))
     else:
-        return render_template('account.html')
+        return render_template('account.html', username=session['username'])
+
+# Generate Report for User in session
+@app.route("/report", methods=['GET', 'POST'])
+def report():
+     # Checks if account is logged it or not
+    if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
+        return redirect(url_for('login'))
+    else:
+        username=session['username']
+        acc = accounts.find_one({'username': username})
+        return render_template('report.html', acc=acc, i=acc['investments'], b=acc['balance'], stocks=acc['stocks'], saved=acc['saved'])
+
 
 # Removes Session When User Logs Out
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
+
+# Routes for Admin Pages
+# Admin Home Page
+@app.route('/admin')
+def admin():
+    if session['username'] == 'admin':
+        allAccounts = accounts.find({'username': {'$ne': 'admin'}})
+        return render_template('admin/admin_accounts.html', username=session['username'], allAccounts=allAccounts)
+    else:
+        return redirect(url_for('home', username=session['username']))
+    
+# Round floats to 2 Decimals --> $XXXX.XX
+@app.template_filter('price')
+def format_price(value):
+    return f"${value:,.2f}"
 
 if __name__ == "__main__":
     app.run()
