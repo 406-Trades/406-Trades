@@ -12,6 +12,7 @@
     max-height:600px;
     max-width:1000px;
     border-radius:35px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .portfolio-container, .owned-container{
     /* display: inline-block; */
@@ -135,6 +136,7 @@
     margin: 0 auto;
     margin-top:60px;
     border-radius:35px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .scrollbar{
     max-width:1040px;

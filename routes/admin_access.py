@@ -49,9 +49,9 @@ def stock_authenticate():
     stock = request.form["stock"].upper()
     response = requests.get(config.BASE_URL + f'/v2/assets/{stock}', headers=headers)
     if response.status_code == 200:
-        return f"{stock} is a valid stock."
+        return f"<p style='color: green;'>{stock} is a valid stock.</p>"
     else:
-        return f"{stock} does not exist."
+        return f"<p style='color: red;'>{stock} does not exist.</p>"
     
 # Admin Authenticate Account
 @account_authenticate_blueprint.route('/account_authenticate', methods=['POST'])
@@ -59,6 +59,6 @@ def account_authenticate():
     username = request.form["account"]
     account = accounts.find_one({'username': username})
     if account:
-        return f"{username} exists in the database!"
+        return f"<p style='color: green;'>{username} exists in the database!</p>"
     else:
-        return f"{username} does not exist in the database."
+        return f"<p style='color: red;'>{username} does not exist in the database.</p>"

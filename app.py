@@ -146,6 +146,18 @@ def account():
     else:
         return render_template('account.html', username=session['username'])
 
+# Generate Report for User in session
+@app.route("/report", methods=['GET', 'POST'])
+def report():
+     # Checks if account is logged it or not
+    if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
+        return redirect(url_for('login'))
+    else:
+        username=session['username']
+        acc = accounts.find_one({'username': username})
+        return render_template('report.html', acc=acc, i=acc['investments'], b=acc['balance'], stocks=acc['stocks'], saved=acc['saved'])
+
+
 # Removes Session When User Logs Out
 @app.route('/logout')
 def logout():

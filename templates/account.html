@@ -3,11 +3,24 @@
 {% block content %}
 <!doctype html>
 <html>
-<head> 
-</head>
+    <head> 
+    </head>
     <body>
-        <h1>Account</h1>
-        <a href="/logout">Logout</a>
+        <div style="width: 60vw; position: absolute; left: 50%; transform: translate(-50%, 0%); padding-top: 20px;">
+            <h1>Account</h1>
+            <p><i>Logged in as {{username}}</i></p>
+            <a href="/logout">Logout</a><br><br>
+
+            <div style="text-align: center;">
+                <h2>Generate Report</h2>
+                <form action = "/report" method="POST">
+                    <p>
+                       <input type = "submit" value = "Generate">
+                    </p>
+                 </form>
+            </div>
+        </div>
+
     </body>
 </html>
 {% endblock %}
