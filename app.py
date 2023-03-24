@@ -162,9 +162,21 @@ def del_account():
 @app.route('/account_settings', methods=['GET', 'POST'])
 def account_settings():
     if request.method == 'POST':
-        username = request.form['username']
-        accounts.update_one({"username" : session['username']}, {"$set" : {"username" : username}})
-        session['username'] = username
+        if 'changeUsr' in request.form:
+            username = request.form['username']
+            accounts.update_one({"username" : session['username']}, {"$set" : {"username" : username}})
+            session['username'] = username
+
+        elif 'changePass' in request.form:
+            oldPass = request.form['password']
+            newPass = request.form['passwordTwo']
+            acc = accounts.find_one({'username': session['username']})
+            print(oldPass)
+            print(acc["password"])
+            if acc["password"] == oldPass:
+                accounts.update_one({"username" : session['username']}, {"$set" : {"password" : newPass}})
+
+
     return render_template('account_settings.html', username=session['username'])
 
 # Routes for Admin Pages

@@ -12,13 +12,14 @@
     <form id="form" method="post">
       <h2>Change username</h2>
       <input class="but" type="text" name="username" placeholder="New Username"> &nbsp;
-      <input id="but" type="submit" value="Change"><br>
+      <input id="but" type="submit" value="Change" name="changeUsr"><br>
     </form>
+
     <form id="form" method="post">
       <h2>Change Password</h2>
       <input class="but" type="password" name="password" placeholder="Old Password"> &nbsp;
       <input class="but" type="password" name="passwordTwo" placeholder="New Password"> &nbsp;
-      <input id="but" type="submit" value="Change"><br>
+      <input id="but" type="submit" value="Change" name="changePass"><br>
     </form>
 
     {% if error %}
