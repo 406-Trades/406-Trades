@@ -5,7 +5,7 @@ import classes.config as config
 import json
 
 # Connect to the Alpaca API
-api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
+api = tradeapi.REST(config.API_KEY, config.SECRET_KEY, "https://paper-api.alpaca.markets/")
 headers = {'APCA-API-KEY-ID': config.API_KEY, 'APCA-API-SECRET-KEY': config.SECRET_KEY}
 
 # Blueprints
@@ -14,6 +14,7 @@ buy_stock_blueprint = Blueprint('buy_stock', __name__)
 sell_stock_blueprint = Blueprint('sell_stock', __name__)
 save_stock_blueprint = Blueprint('save_stock', __name__)
 search_stock_blueprint = Blueprint('search_stock', __name__)
+filter_stock_blueprint = Blueprint('filter_stock', __name__)
 
 # Updates the Balance of the account (positive amount is deposit and negative is withdraw)
 @update_balance_blueprint.route('/update_balance', methods=['GET', 'POST'])
@@ -36,46 +37,46 @@ def update_balance():
 def buy_stock():
     # GET's User Data
     username = request.args.get('username')
-    nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
     acc = Account(username)
     symbol = request.args.get('symbol')
-    shares = int(request.form['nasdaq-amount'])
+    shares = int(request.args.get('nasdaqAmount'))
     # Calculates Value of Stocks User Wishes to Buy 
     amount = float(api.get_latest_trade(symbol).price) * shares
     if (shares > 0 and shares <= acc.get_balance()):
         # Updates Owned Stocks in Account Object and DB
         acc.buy_stock(symbol, shares)
         acc.withdraw(amount)
-        return redirect(url_for('market', username=username, nasdaqData=nasdaqData))
+        return redirect(url_for('market', username=username, symbol=symbol))
     else:
         # Error Handling
         if (shares < 0):
-            return render_template('market.html', username=username, nasdaqData=nasdaqData, error='Invalid Stock Quantity', errorSymbol=symbol)
+            return render_template('market.html', username=username, error='Invalid Stock Quantity', errorSymbol=symbol)
         elif (amount > acc.get_balance()):
-            return render_template('market.html', username=username, nasdaqData=nasdaqData, error='Insufficient Balance', errorSymbol=symbol)
+            return render_template('market.html', username=username, error='Insufficient Balance', errorSymbol=symbol)
 
 # Sell Stock
 @sell_stock_blueprint.route('/sell_stock', methods=['GET', 'POST'])
 def sell_stock():
     # GET's User Data
     username = request.args.get('username')
-    nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
+    # nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
     acc = Account(username)
     symbol = request.args.get('symbol')
-    shares = int(request.form['nasdaq-amount'])
+    # shares = request.args.get('nasdaq-amount')
+    shares = 1
     # Calculates Value of Stocks User Wishes to Sell 
     amount = float(api.get_latest_trade(symbol).price) * shares
     if (shares <= acc.get_balance()):
         # Updates Owned Stocks in Account Object and DB
         acc.sell_stock(symbol, shares)
         acc.deposit(amount)
-        return redirect(url_for('market', username=username, nasdaqData=nasdaqData))
+        return redirect(url_for('market', username=username, symbol=symbol))
     else:
         # Error Handling
         if (shares < 0):
-            return render_template('market.html', username=username, nasdaqData=nasdaqData, error='Invalid Stock Quantity', errorSymbol=symbol)
+            return render_template('market.html', username=username, error='Invalid Stock Quantity', errorSymbol=symbol)
         elif (shares > acc.get_shares(symbol)):
-            return render_template('market.html', username=username, nasdaqData=nasdaqData, error='Insufficient Shares', errorSymbol=symbol)
+            return render_template('market.html', username=username, error='Insufficient Shares', errorSymbol=symbol)
 
 
     return redirect(url_for('market'))
@@ -85,7 +86,7 @@ def sell_stock():
 def save_stock():
     # GET's User Data
     username = request.args.get('username')
-    nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
+    # nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
 
     acc = Account(username)
     symbol = request.args.get('symbol')
@@ -93,22 +94,46 @@ def save_stock():
     # Save stock to user's watchlist
     acc.save_stock(symbol)
 
-    return render_template('market.html', username=username, nasdaqData=nasdaqData)
+    return render_template('market.html', username=username, symbol=symbol)
 
 # Search Stock
 @search_stock_blueprint.route('/search_stock', methods=['GET', 'POST'])
 def search_stock():
     # GET's User Data
-    nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
+    # nasdaqData = json.loads(request.args.get('nasdaqData').replace("'", "\""))
     username = request.args.get('username')
-    symbol = request.form['stock_search']
+    symbol = request.form['stock_search'].upper()
 
-    # symbol = 'AAPL'
+    # Checks for if the stock exists. If it does, it displays buy, sell and save options
+    try:
+        get_stock = api.get_latest_trade(symbol.upper()).price
+        stock_name = api.get_asset(symbol).name
 
-    get_stock = api.get_latest_trade(symbol)
-    print(get_stock)
+        return render_template('market.html', username=username, showStock="True", symbol=symbol.upper(), price=get_stock, name=stock_name)
+    # Otherwise, an error is outputted
+    except:
+        return render_template('market.html', username=username, error='Stock not found', errorSymbol=symbol)
 
-    return render_template('market.html', username=username, nasdaqData=nasdaqData)
-    # return render_template('market.html', name="bob")
-
+# Filter Stock
+@filter_stock_blueprint.route('/filter_stock', methods=['GET', 'POST'])
+def filter_stock():
+    # GET's User Data
+    username = request.args.get('username')
+    exchange = request.args.get('exchange')
+    active_assets = api.list_assets(status="active")
+    matching_stocks = {}
     
+    if exchange == "All":
+        nasdaq_assets = active_assets
+    else:
+        nasdaq_assets = [a for a in active_assets if a.exchange == exchange]
+
+    for asset in nasdaq_assets[:50]:
+        try:
+            price = api.get_latest_trade(asset.symbol).price
+            matching_stocks[asset.symbol] = [asset.name, price]
+        except:
+            continue
+
+
+    return render_template('market.html', username=username, stocks=matching_stocks)

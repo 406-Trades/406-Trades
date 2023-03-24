@@ -19,6 +19,7 @@ from routes.transaction import buy_stock_blueprint
 from routes.transaction import sell_stock_blueprint
 from routes.transaction import save_stock_blueprint
 from routes.transaction import search_stock_blueprint
+from routes.transaction import filter_stock_blueprint
 from routes.admin_access import edit_account_blueprint
 
 # Configure App
@@ -30,6 +31,7 @@ app.register_blueprint(buy_stock_blueprint)
 app.register_blueprint(sell_stock_blueprint)
 app.register_blueprint(save_stock_blueprint)
 app.register_blueprint(search_stock_blueprint)
+app.register_blueprint(filter_stock_blueprint)
 app.register_blueprint(edit_account_blueprint)
 
 # # Connect to the Alpaca API
@@ -122,14 +124,11 @@ def home():
 # Stock Market Page
 @app.route("/market") 
 def market():
-    with open('./static/data/nasdaq100.json', 'r') as file:
-        nasdaqData = json.load(file)
-
     # Checks if account is logged it or not
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
         return redirect(url_for('login'))
     else:
-        return render_template('market.html', username=session['username'], nasdaqData=nasdaqData)
+        return render_template('market.html', username=session['username'])
 
 # FAQ Page
 @app.route("/faq") 

@@ -108,5 +108,4 @@ class Account:
 
     # Save Stock for given Account
     def save_stock(self, symbol):
-        saved = self.saved
-        accounts.update_one({"username" : self.username}, {"$push" : {"saved" : symbol}})
+        accounts.update_one({"username" : self.username}, {"$addToSet" : {"saved" : symbol}})

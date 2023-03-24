@@ -11,37 +11,55 @@
         <div class="button-container">
             <button id="show-search" onclick="marketShow()">Search</button>
             <div class="line"></div>
-            <button id="show-nasdaq" onclick="nasdaqShow()">Top 100</button>
+            <button id="show-nasdaq" onclick="nasdaqShow()">Filter</button>
         </div>
 
         <!-- Search Stock Page -->
         <div class="market-container">
             <form method="POST">
+                <h2>Search for a stock</h2>
                 <label for="stock_search">Search for stock:</label>
                 <input type="text" id="stock_search" name="stock_search">
 
                 <button type="submit" id="save-button" name="save-button" value="Submit" 
-                formaction="{{ url_for('search_stock.search_stock', username=username, symbol=symbol, nasdaqData=nasdaqData) }}">Search</button>
+                formaction="{{ url_for('search_stock.search_stock', username=username, symbol=symbol) }}">Search</button>
 
-                <!-- <label for="transaction_type">Transaction type:</label>
-                <select id="transaction_type" name="transaction_type">
-                    <option value="buy">Buy</option>
-                    <option value="sell">Sell</option>
-                </select> -->
-                
-                <!-- <label for="transaction_amount">Amount:</label>
-                <input type="input" id="transaction_amount" name="transaction_amount">
-                 -->
-
-            {% if error and symbol == errorSymbol %}
-            <p id="error-msg">{{ error }}</p>
+            {% if error %}
+                <p id="error-msg">{{ error }}</p>
             {% endif %}
             </form>
+
+            <div id="stock-info" style="display: none;">
+                {{ symbol }}
+                {{ name }}
+                ${{ price }}
+                <form method="POST">
+                    <button formaction="{{ url_for('buy_stock.buy_stock', username=username, symbol=symbol, nasdaqAmount=1) }}">Buy</button>
+                    <button formaction="{{ url_for('sell_stock.sell_stock', username=username, symbol=symbol, nasdaqAmount=1) }}">Sell</button></br>
+                    <button formaction="{{ url_for('save_stock.save_stock', username=username, symbol=symbol) }}">Save</button>
+                </form>
+            </div>
+
+            <!-- Script for showing and hiding stock info -->
+            <script type="text/javascript">
+                const stockDiv = document.getElementById("stock-info");
+                const visibleInfo = localStorage.getItem("visibleDivId");
+
+            window.onload = function updateStock() {
+                if ("{{ showStock }}" == "True") {
+                    stockDiv.style.display = "block";
+                }
+                else {
+                    stockDiv.style.display = "None";
+                }
+            };
+
+            </script>
         </div>
 
         <!-- Nasdaq Top 100 Stocks Page -->
         <div class="nasdaq-container" style="display: none;">
-            {% include "nasdaq100.html" %}
+            {% include "filter.html" %}
         </div>
 
         <!-- Script for buttons -->
