@@ -1,14 +1,15 @@
 /* Container for Account Financial / Stock Information */
 .home-container{
-    background: linear-gradient(to bottom right, #00ffff, #ff00ff);
+    /* background: linear-gradient(to bottom right, #00ffff, #ff00ff); */
     margin:0 auto;
     display:flex;
-    
+    background-color: #CECECE;
     margin-top:120px;
     padding:45px;
-    height:50vh;
+    /* height:70vh; */
     width:70vw;
-    max-height:500px;
+    height:50vh;
+    max-height:600px;
     max-width:1000px;
     border-radius:35px;
 }
@@ -18,22 +19,58 @@
 }
 /* Column 1 in Portfolio */
 .portfolio-container{
-    width: 50vw;
-    height: 500px;
+    float:left;
+    width: 75%;
+    position: relative;
+}
+.form{
+    position: absolute;
+    bottom: 0;
+}
+.form-input{
+    box-sizing: border-box; 
+    width: 30%; 
+    padding: 8px; 
+    border: 2px solid #ccc; 
+    border-radius: 4px; 
+    font-size: 1rem; 
+    background-color: white; 
+    background-image: none; 
+    transition: border-color 0.3s ease-in-out;
+    text-align: right;
+}
+#form-subtitle{
+    font-size: 1.5rem;
+}
+#inc-button, #dec-button{
+    border: none; 
+    color: white; 
+    padding: 12px 24px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px; 
+    margin: 4px 2px; 
+    cursor: pointer; 
+    border-radius: 8px; 
+    margin-top:15px;
+}
+#inc-button{
+    background-color: #4CAF50; 
+}
+#dec-button{
+    background-color: #f93535; 
 }
 /* Column 2 in Portfolio */
 .owned-container{
     float: right;
-    width: 18vw;
-    height: 500px;
+    width: 25%;
     text-align: center;
     background-color: rgba(255, 255, 255, 0.356);
     border-radius:35px;
     font-size: 2rem;
     line-height: 43px;
     overflow-y: scroll;
-    /* padding-top:15px; */
-    padding-bottom:15px;
 }
 /* Scroll Bar Styling */
 .owned-container::-webkit-scrollbar {
@@ -50,6 +87,10 @@
 .owned-container::-webkit-scrollbar-thumb:hover {
     background-color: rgba(255, 255, 255, 0.45);
 }
+#owned-title{
+    font-size:1.5rem;
+    font-weight:bold;
+}
 /* Title */
 .portfolio-container>h1{
     font-size:4rem;
@@ -57,14 +98,31 @@
     margin-bottom:35px;
 }
 /* Sub Titles */
+#val{
+    font-size:4em;
+    display: inline-block;
+}
+.inv-bal{
+    display:flex;
+    justify-content: space-between;
+    padding-right: 50px;
+}
 #inv, #bal {
-    font-size: 3rem;
+    font-size: 2rem;
     padding-top:25px;
+    display: inline-block;
+}
+.value{
+    font-size: 3rem;
+}
+.value-acc{
+    font-size: 5rem;
+    font-weight:bolder;
 }
 /* Saved Stock Portfolio Container */
 .saved-container{
     width:70vw;
-    background: linear-gradient(to bottom right, #00ffff, #ff00ff);
+    background: #CECECE;
     height: 200px;
     max-width:1000px;
     padding:1px 45px 5px;
@@ -88,7 +146,7 @@
     background-color: transparent;
 }
 .scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.678);
+    background-color: rgb(255, 255, 255);
     border-radius: 20px;
 }
 .scrollbar::-webkit-scrollbar-thumb:hover {
@@ -98,9 +156,25 @@
 .saved-stock{
     display: inline-block;
     background-color: #ddd;
-    width: 290px;
+    width: 250px;
     height: 80px;
     margin-right: 10px;
     border-radius:10px;
     padding:10px;
+    font-size:2rem;
+}
+#sub-title{
+    font-size: 1rem;
+}
+#buy-amount{
+    box-sizing: border-box; 
+    width: 15%; 
+    text-align: right;
+    padding: 4px; 
+    border: 2px solid #ccc; 
+    border-radius: 4px; 
+    font-size: 1rem; 
+    background-color: white; 
+    background-image: none;
+    transition: border-color 0.3s ease-in-out;
 }
