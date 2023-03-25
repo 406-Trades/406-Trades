@@ -29,7 +29,7 @@
     color: #000000;
     box-shadow: 4px 4px 4px -2px rgba(0, 0, 0, 0.25);
 }
-#show-nasdaq{
+#show-filter{
     width:200px;
     margin-left:30px;
     padding:15px;
@@ -50,7 +50,7 @@
     cursor: pointer;
     background-color: #efefef81;
 }
-#show-nasdaq:hover{
+#show-filter:hover{
     cursor: pointer;
     background-color: #efefef81;
 }
@@ -60,7 +60,7 @@
 .Top100-Title{
     text-align: center;
 }
-.nasdaq-stock-container{
+.filter-stock-container{
     background-color: rgb(212, 212, 212);
     margin: 0 auto;
     width: 50vw;
@@ -81,11 +81,11 @@
 .stock-form>button{
     float:right;
 }
-.nasdaq-stock{
+.filter-stock{
     display: flex;
     float:left;
 }
-.nasdaq-stock>h2{
+.filter-stock>h2{
     margin-right:25px;
 }
 #symbol{
@@ -102,7 +102,7 @@
 #save-button{
 
 }
-#nasdaq-amount{
+#filter-amount{
 
 }
 #error-msg{
