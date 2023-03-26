@@ -153,7 +153,7 @@ class Transaction:
             for asset in assets[:50]:
                 try:
                     price = self.api.get_latest_trade(asset.symbol).price
-                    matching_stocks[asset.symbol] = [asset.name, price]
+                    matching_stocks[asset.symbol] = [asset.name, '{0:.2f}'.format(price)]
                 except:
                     continue
 
