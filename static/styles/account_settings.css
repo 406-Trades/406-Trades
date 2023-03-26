@@ -124,3 +124,14 @@
     background-color: rgb(47, 47, 47);
     color: #CECECE;
 }
+#but{
+    transition: all 0.3s ease-in-out;
+    border-radius: 5px;
+}
+.but{
+    border-radius: 5px;
+}
+
+.header{
+    color: #CECECE
+}
