@@ -14,7 +14,3 @@ Clone Repo:
 
 Run App:
 > py app.py
-
-or
-
-> python3 app.py
