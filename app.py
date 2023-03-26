@@ -4,6 +4,10 @@ from pymongo import MongoClient
 import json
 import alpaca_trade_api as tradeapi
 import classes.config as config
+<<<<<<< HEAD
+from classes.mypylib import log as pylog
+=======
+>>>>>>> parent of fefc9c3 (Merge branch 'main' of https://github.com/406-Trades/406-Trades)
 
 # Imported Classes
 from classes.authentication import Authentication
@@ -25,6 +29,9 @@ transaction = Transaction()
 app.register_blueprint(transaction.update_balance_blueprint)
 app.register_blueprint(transaction.buy_stock_blueprint)
 app.register_blueprint(transaction.sell_stock_blueprint)
+app.register_blueprint(transaction.save_stock_blueprint)
+app.register_blueprint(transaction.search_stock_blueprint)
+app.register_blueprint(transaction.filter_stock_blueprint)
 admin_access = Admin_Access()
 app.register_blueprint(admin_access.edit_account_blueprint)
 app.register_blueprint(admin_access.stock_authenticate_blueprint)
@@ -117,7 +124,11 @@ def home():
     else:
         username=session['username']
         acc = accounts.find_one({'username': username})
-        return render_template('home.html', username=username, acc=acc, i=acc['investments'], b=acc['balance'], stocks=acc['stocks'], saved=acc['saved'])
+
+        user = Account(username)
+        user.get_invest()
+
+        return render_template('home.html', username=username, acc=acc, i=round(acc['investments'], 2), b=round(acc['balance'], 2), stocks=acc['stocks'], saved=acc['saved'])
 
 # Stock Market Page
 @app.route("/market") 
@@ -126,7 +137,7 @@ def market():
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
         return redirect(url_for('login'))
     else:
-        return render_template('market.html', username=session['username'])
+        return render_template('market.html', username=session['username'], companies={})
 
 # FAQ Page
 @app.route("/faq") 

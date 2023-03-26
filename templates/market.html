@@ -7,44 +7,88 @@
 </head>
 <html>
     <body>
-        <!-- Choose Between Search div and Nasdaq div -->
+        <!-- Choose Between Search div and filter div -->
         <div class="button-container">
             <button id="show-search" onclick="marketShow()">Search</button>
             <div class="line"></div>
-            <button id="show-nasdaq" onclick="nasdaqShow()">Top 100</button>
+            <button id="show-filter" onclick="filterShow()">Filter</button>
         </div>
 
         <!-- Search Stock Page -->
         <div class="market-container">
-            {% include "stock_search.html" %}
+            <form method="POST">
+                <h2>Search for a stock</h2>
+                <label for="stock_search">Search for stock:</label>
+                <input type="text" id="stock_search" name="stock_search">
+
+                <button type="submit" id="save-button" name="save-button" value="Submit" 
+                formaction="{{ url_for('search_stock.search_stock', username=username, symbol=symbol) }}">Search</button>
+
+            {% if error %}
+                <p id="error-msg">{{ error }}</p>
+            {% endif %}
+            </form>
+
+            <div id="stock-info" style="display: none;">
+                {{ symbol }}
+                {{ name }}
+                ${{ price }}
+                <form class="show-search" method="POST">
+                    <input type="text" id="search-amount" name="search-amount" maxlength="6" size="4" value=1>
+                    <button formaction="{{ url_for('buy_stock.buy_stock', username=username, symbol=symbol, from='search') }}">Buy</button>
+                    <button formaction="{{ url_for('sell_stock.sell_stock', username=username, symbol=symbol, from='search') }}">Sell</button></br>
+                    <button formaction="{{ url_for('save_stock.save_stock', username=username, symbol=symbol) }}">Save</button>
+                </form>
+            </div>
+
+            <!-- Script for showing and hiding stock info -->
+            <script type="text/javascript">
+                const stockDiv = document.getElementById("stock-info");
+                const visibleInfo = localStorage.getItem("visibleDivId");
+
+            window.onload = function updateStock() {
+                if ("{{ showStock }}" == "True") {
+                    stockDiv.style.display = "block";
+                }
+                else {
+                    stockDiv.style.display = "None";
+                }
+            };
+
+            </script>
         </div>
 
+        <!-- Filter Stocks Page -->
+        <div class="filter-container" style="display: none;">
+            {% include "filter.html" %}
+        </div>
 
         <!-- Script for buttons -->
         <script type="text/javascript">
             const showFirstButton = document.getElementById("show-search");
-            const showSecondButton = document.getElementById("show-nasdaq");
+            const showSecondButton = document.getElementById("show-filter");
             const marketDiv = document.getElementsByClassName("market-container")[0];
-            const nasdaqDiv = document.getElementsByClassName("nasdaq-container")[0];
+            const filterDiv = document.getElementsByClassName("filter-container")[0];
             const visibleDivId = localStorage.getItem('visibleDivId');
 
             // Show The Correct Div, Despite Refreshing The Page
-            if (visibleDivId === 'nasdaqDiv') {
-            nasdaqShow();
+            if (visibleDivId === 'filterDiv') {
+                filterShow();
             } else {
-            marketShow();
+                marketShow();
             }
             // Shows First Div, Hides Second Div
             function marketShow() {
                 marketDiv.style.display = "block";
-                nasdaqDiv.style.display = "none";
+                filterDiv.style.display = "none";
                 localStorage.setItem('visibleDivId', 'marketDiv');
             };
             // Shows Second Div, Hides First Div
-            function nasdaqShow() {
+            function filterShow() {
                 marketDiv.style.display = "none";
-                nasdaqDiv.style.display = "block";
-                localStorage.setItem('visibleDivId', 'nasdaqDiv');
+                filterDiv.style.display = "block";
+
+                localStorage.setItem('visibleDivId', 'filterDiv');
             };
         </script>
     </body>
