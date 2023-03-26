@@ -11,21 +11,24 @@
 	<div class="container">
 		<a href="/logout" class="logout">Logout</a>
         <a href="/account_settings" class="settings">Account Settings</a>
-		<h1>Account</h1>
-        <form id ='form' method="GET"> 
-            <div class="container-box">
-                <!-- Modified this line -->
-                <p style="color: black;"> Hello {{ username }}</p>
+		<h1 class="account">Account</h1>
+        <div class="container-box">
+            <form id ='form' method="GET">     
+            <!-- Modified this line -->
+                <h2 style="color: black;"> Hello {{ username }}</h2>
                 {% if error %}
                     <p id="error-msg">{{ error }}</p>
-                {% endif %}    
+                {% endif %}
+            </form> 
+            <form action="/report" method="POST">
                 <div style="text-align: center;">
                     <!-- Modified this line -->
                     <button class="generate-report" type="submit">Generate Report</button>
                 </div>
+            </form>
+            <a href="/del_account" class="delete">Delete Account</a>
+
             </div>
-        </form>
-		<a href="/del_account" class="delete">Delete Account</a>
 	</div>
 </body>
 </html>
