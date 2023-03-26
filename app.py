@@ -4,10 +4,7 @@ from pymongo import MongoClient
 import json
 import alpaca_trade_api as tradeapi
 import classes.config as config
-<<<<<<< HEAD
-from classes.mypylib import log as pylog
-=======
->>>>>>> parent of fefc9c3 (Merge branch 'main' of https://github.com/406-Trades/406-Trades)
+# from classes.mypylib import log as pylog
 
 # Imported Classes
 from classes.authentication import Authentication
