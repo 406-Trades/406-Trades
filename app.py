@@ -4,7 +4,8 @@ from pymongo import MongoClient
 import json
 import alpaca_trade_api as tradeapi
 import classes.config as config
-from classes.mypylib import log as pylog
+# from classes.mypylib import log as pylog
+
 # Imported Classes
 from classes.authentication import Authentication
 from classes.admin import Admin
@@ -14,6 +15,7 @@ from classes.stock import Stock
 # Blueprints for Flask routes
 from routes.transaction import Transaction
 from routes.admin_access import Admin_Access
+from routes.report import Report
 
 # Configure App
 app = Flask(__name__) 
@@ -22,11 +24,17 @@ app = Flask(__name__)
 transaction = Transaction()
 app.register_blueprint(transaction.update_balance_blueprint)
 app.register_blueprint(transaction.buy_stock_blueprint)
+app.register_blueprint(transaction.buy_stock_home_blueprint)
 app.register_blueprint(transaction.sell_stock_blueprint)
+app.register_blueprint(transaction.save_stock_blueprint)
+app.register_blueprint(transaction.search_stock_blueprint)
+app.register_blueprint(transaction.filter_stock_blueprint)
 admin_access = Admin_Access()
 app.register_blueprint(admin_access.edit_account_blueprint)
 app.register_blueprint(admin_access.stock_authenticate_blueprint)
 app.register_blueprint(admin_access.account_authenticate_blueprint)
+report = Report()
+app.register_blueprint(report.generate_report_blueprint)
 
 # # Connect to the Alpaca API
 # api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
@@ -113,7 +121,11 @@ def home():
     else:
         username=session['username']
         acc = accounts.find_one({'username': username})
-        return render_template('home.html', username=username, acc=acc, i=acc['investments'], b=acc['balance'], stocks=acc['stocks'], saved=acc['saved'])
+
+        user = Account(username)
+        user.get_invest()
+
+        return render_template('home.html', username=username, acc=acc, i=round(acc['investments'], 2), b=round(acc['balance'], 2), stocks=acc['stocks'], saved=acc['saved'])
 
 # Stock Market Page
 @app.route("/market") 
@@ -122,7 +134,7 @@ def market():
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
         return redirect(url_for('login'))
     else:
-        return render_template('market.html', username=session['username'])
+        return render_template('market.html', username=session['username'], companies={})
 
 # FAQ Page
 @app.route("/faq") 
@@ -143,16 +155,15 @@ def account():
         return render_template('account.html', username=session['username'])
 
 # Generate Report for User in session
-@app.route("/report", methods=['GET', 'POST'])
-def report():
-     # Checks if account is logged it or not
-    if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
-        return redirect(url_for('login'))
-    else:
-        username=session['username']
-        acc = accounts.find_one({'username': username})
-        return render_template('report.html', acc=acc, i=acc['investments'], b=acc['balance'], stocks=acc['stocks'], saved=acc['saved'])
-
+# @app.route("/report", methods=['GET', 'POST'])
+# def report():
+#      # Checks if account is logged it or not
+#     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
+#         return redirect(url_for('login'))
+#     else:
+#         username=session['username']
+#         acc = accounts.find_one({'username': username})
+#         return render_template('report.html', acc=acc, i=acc['investments'], b=acc['balance'], stocks=acc['stocks'], saved=acc['saved'])
 
 # Removes Session When User Logs Out
 @app.route('/logout')

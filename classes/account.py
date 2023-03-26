@@ -3,6 +3,7 @@ from pymongo import MongoClient
 import alpaca_trade_api as tradeapi
 import requests
 import classes.config as config
+
 # Connect to the Alpaca API
 api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
 headers = {'APCA-API-KEY-ID': config.API_KEY, 'APCA-API-SECRET-KEY': config.SECRET_KEY}
@@ -40,7 +41,6 @@ class Account:
             if requests.get(config.BASE_URL + f'/v2/assets/{symbol}', headers=headers).status_code == 200:
                 updatedInvest += float(api.get_latest_trade(symbol).price) * float(quantity)
         
-        print(updatedInvest)
         # Update Account in DB
         accounts.update_one({"username" : self.username}, {"$set" : {"investments" : updatedInvest}})
         self.investments = updatedInvest
@@ -56,16 +56,22 @@ class Account:
         return self.password
     
     def get_balance(self):
-        return self.balance
+        return round(self.balance, 2)
     
     def get_invest(self):
-        return self.acc['investments']
+        return round(self.acc['investments'], 2)
     
     def get_stocks(self):
         return self.stocks
 
     def get_saved(self):
         return self.saved
+    
+    def get_shares(self, symbol):
+        try:
+            return self.stocks[symbol]
+        except:
+            return 0
     
     # Setter Functions
     # Change Username
@@ -88,7 +94,18 @@ class Account:
                 newDict[symbol] = shares
             accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
 
+    # Sell Stock for given Account
+    def sell_stock(self, symbol, shares):
+        if shares > 0:
+            newDict = self.stocks
+            if (symbol in self.stocks) and (shares < newDict[symbol]):
+                newDict[symbol] -= shares
+                
+                if newDict[symbol] <= 0:
+                    accounts.delete_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
+                else:
+                    accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
+
     # Save Stock for given Account
     def save_stock(self, symbol):
-        saved = self.saved
-        accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : saved.append(symbol)}})
+        accounts.update_one({"username" : self.username}, {"$addToSet" : {"saved" : symbol}})
