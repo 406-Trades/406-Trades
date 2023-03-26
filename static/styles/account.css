@@ -13,7 +13,7 @@
     padding: 20px;
     margin-top: 20px;
 }
-.account{
+.header{
     color:#CECECE
 }
 /* added CSS styles for the button */
@@ -21,6 +21,7 @@ button.generate-report {
     background-color: #CECECE;
     color: rgb(47, 47, 47);
     padding: 10px;
+    font-size: 1.2em;
     border-radius: 5px;
     border: 2px solid rgb(47, 47, 47);
     cursor: pointer;
@@ -59,6 +60,7 @@ color: rgb(47, 47, 47);
 text-decoration: none;
 border: 2px solid rgb(47, 47, 47);
 padding: 10px;
+font-size: 1.2em;
 border-radius: 5px;
 transition: all 0.3s ease-in-out;
 display: block;
