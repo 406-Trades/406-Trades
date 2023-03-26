@@ -135,3 +135,7 @@
 .header{
     color: #CECECE
 }
+
+#error-msg{
+    color:rgb(246, 75, 75);
+}
