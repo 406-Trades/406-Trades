@@ -1,3 +1,11 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgb(47, 47, 47);
+    color: #fff;
+    }
 /* Container for Account Financial / Stock Information */
 .home-container{
     background: linear-gradient(to bottom right, #00ffff, #ff00ff);
@@ -11,6 +19,13 @@
     max-height:500px;
     max-width:1000px;
     border-radius:35px;
+}
+
+.container-box {
+    background-color: #CECECE;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
 }
 .portfolio-container, .owned-container{
     /* display: inline-block; */
