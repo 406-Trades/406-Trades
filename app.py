@@ -20,7 +20,6 @@ from routes.transaction import Transaction
 from routes.admin_access import Admin_Access
 from routes.report import Report
 
-
 # Configure App
 app = Flask(__name__) 
 
