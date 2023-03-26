@@ -1,6 +1,0 @@
-USER: {'_id': ObjectId('6416937d4f9a4a14318cfcc2'), 'username': '123', 'password': '1', 'balance': 2212.5449999999996, 'investments': 2390.7, 'stocks': {'AAPL': '15'}, 'saved': ['', 'AAPL']}
-USER: {'_id': ObjectId('641a3c276251d24cf333a8ac'), 'username': '1234', 'password': '1', 'balance': 2000, 'investments': 0, 'stocks': {}, 'saved': []}
-USER-PRE: {'_id': ObjectId('641a3f215cdbf9dd445c7744'), 'username': 'alexj', 'password': 'test', 'balance': 2000, 'investments': 0, 'stocks': {}, 'saved': []}
-USER-PRE: {'_id': ObjectId('641a3f215cdbf9dd445c7744'), 'username': 'alexj', 'password': 'test', 'balance': 2000, 'investments': 0, 'stocks': {}, 'saved': []}
-USER-PRE: {'_id': ObjectId('641a40f18520e2e9d600f558'), 'username': 'alexj', 'password': '1', 'balance': 2000, 'investments': 0, 'stocks': {}, 'saved': []}
-USER-PRE: {'_id': ObjectId('641a4131a1414b510dcb2e92'), 'username': 'alexj', 'password': 'test', 'balance': 2000, 'investments': 0, 'stocks': {}, 'saved': []}

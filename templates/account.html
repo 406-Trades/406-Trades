@@ -3,31 +3,24 @@
 {% block content %}
 <!doctype html>
 <html>
-<head> 
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/account.css') }}">
-	<title>Account</title>
-</head>
-<body>
-	<div class="container">
-		<a href="/logout" class="logout">Logout</a>
-        <a href="/account_settings" class="settings">Account Settings</a>
-		<h1>Account</h1>
-        <form id ='form' method="GET"> 
-            <p> Hello {{ username }}</p>
-            {% if error %}
-                    <p id="error-msg">{{ error }}</p>
-            {% endif %}    
-        </form>
-        <div style="text-align: center;">
-            <h2>Generate Report</h2>
-            <form action = "/report" method="POST">
-                <p>
-                   <input type = "submit" value = "Generate">
-                </p>
-             </form>
+    <head> 
+    </head>
+    <body>
+        <div style="width: 60vw; position: absolute; left: 50%; transform: translate(-50%, 0%); padding-top: 20px;">
+            <h1>Account</h1>
+            <p><i>Logged in as {{username}}</i></p>
+            <a href="/logout">Logout</a><br><br>
+
+            <div style="text-align: center;">
+                <h2>Generate Report</h2>
+                <form action = "/report" method="POST">
+                    <p>
+                       <input type = "submit" value = "Generate">
+                    </p>
+                 </form>
+            </div>
         </div>
-		<a href="/del_account" class="delete">Delete Account</a>
-	</div>
-</body>
+
+    </body>
 </html>
 {% endblock %}
