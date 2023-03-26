@@ -1,0 +1,141 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgb(47, 47, 47);
+    color: #fff;
+    }
+/* Container for Account Financial / Stock Information */
+.home-container{
+    background: linear-gradient(to bottom right, #00ffff, #ff00ff);
+    margin:0 auto;
+    display:flex;
+    
+    margin-top:120px;
+    padding:45px;
+    height:50vh;
+    width:70vw;
+    max-height:500px;
+    max-width:1000px;
+    border-radius:35px;
+}
+
+.container-box {
+    background-color: #CECECE;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+.portfolio-container, .owned-container{
+    /* display: inline-block; */
+    /* border: 1px solid red; */
+}
+/* Column 1 in Portfolio */
+.portfolio-container{
+    width: 50vw;
+    height: 500px;
+}
+/* Column 2 in Portfolio */
+.owned-container{
+    float: right;
+    width: 18vw;
+    height: 500px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.356);
+    border-radius:35px;
+    font-size: 2rem;
+    line-height: 43px;
+    overflow-y: scroll;
+    /* padding-top:15px; */
+    padding-bottom:15px;
+}
+/* Scroll Bar Styling */
+.owned-container::-webkit-scrollbar {
+    height: 15px;
+    width: 20px;
+}
+.owned-container::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+.owned-container::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.678);
+    border-radius: 20px;
+}
+.owned-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.45);
+}
+/* Title */
+.portfolio-container>h1{
+    font-size:6rem;
+    margin-top:0px;
+    margin-bottom:35px;
+}
+/* Sub Titles */
+#inv, #bal {
+    font-size: 3rem;
+    padding-top:25px;
+}
+/* Saved Stock Portfolio Container */
+.saved-container{
+    width:70vw;
+    background: linear-gradient(to bottom right, #00ffff, #ff00ff);
+    height: 200px;
+    max-width:1000px;
+    padding:1px 45px 5px;
+    margin: 0 auto;
+    margin-top:60px;
+    border-radius:35px;
+}
+.scrollbar{
+    max-width:1040px;
+    white-space: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding-bottom: 10px;
+}
+/* Scroll Bar Styling */
+.scrollbar::-webkit-scrollbar {
+    height: 15px;
+    width: 20px;
+}
+.scrollbar::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+.scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.678);
+    border-radius: 20px;
+}
+.scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.45);
+}
+/* Saved Stock Div */
+.saved-stock{
+    display: inline-block;
+    background-color: #ddd;
+    width: 290px;
+    height: 80px;
+    margin-right: 10px;
+    border-radius:10px;
+    padding:10px;
+}
+
+#but:hover{
+    background-color: rgb(47, 47, 47);
+    color: #CECECE;
+}
+#but{
+    transition: all 0.3s ease-in-out;
+    border-radius: 5px;
+}
+.but{
+    border-radius: 5px;
+}
+
+.header{
+    color: #CECECE
+}
+
+#error-msg{
+    color:rgb(246, 75, 75);
+}

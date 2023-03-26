@@ -1,0 +1,91 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgb(47, 47, 47);
+    color: #fff;
+    }
+/* added CSS styles */
+.container-box {
+    background-color: #CECECE;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+.header{
+    color:#CECECE
+}
+/* added CSS styles for the button */
+button.generate-report {
+    background-color: #CECECE;
+    color: rgb(47, 47, 47);
+    padding: 10px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    border: 2px solid rgb(47, 47, 47);
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+button.generate-report:hover {
+    background-color: rgb(47, 47, 47);
+    color: #CECECE;
+}
+    
+h1 {
+margin-top: 0;
+}
+
+.logout {
+float: right;
+font-size: 16px;
+color: #CECECE;
+text-decoration: none;
+border: 2px solid #CECECE;
+padding: 10px;
+border-radius: 5px;
+transition: all 0.3s ease-in-out;
+}
+
+.logout:hover {
+background-color: #CECECE;
+color: rgb(47, 47, 47);
+}
+
+.delete {
+font-size: 16px;
+color: rgb(47, 47, 47);
+text-decoration: none;
+border: 2px solid rgb(47, 47, 47);
+padding: 10px;
+font-size: 1.2em;
+border-radius: 5px;
+transition: all 0.3s ease-in-out;
+display: block;
+margin-top: 20px;
+text-align: center;
+}
+
+.delete:hover {
+background-color: #FF0000;
+color: rgb(255,255,0);
+}
+
+.settings {
+float: right;
+font-size: 16px;
+color: #CECECE;
+text-decoration: none;
+border: 2px solid #CECECE;
+margin-right: 10px;
+padding: 10px;
+border-radius: 5px;
+transition: all 0.3s ease-in-out;
+}
+
+.settings:hover {
+background-color: #CECECE;
+color: rgb(47, 47, 47);
+}
