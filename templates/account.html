@@ -13,7 +13,7 @@
 
             <div style="text-align: center;">
                 <h2>Generate Report</h2>
-                <form action = "/report" method="POST">
+                <form action = "{{ url_for('report.report') }}" method="POST">
                     <p>
                        <input type = "submit" value = "Generate">
                     </p>
