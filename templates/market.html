@@ -21,12 +21,8 @@
                 <label for="stock_search">Search for stock:</label>
                 <input type="text" id="stock_search" name="stock_search">
 
-                <button type="submit" id="save-button" name="save-button" value="Submit" 
+                <button type="submit" id="search-button" name="search-button" value="Submit" 
                 formaction="{{ url_for('search_stock.search_stock', username=username, symbol=symbol) }}">Search</button>
-
-            {% if error %}
-                <p id="error-msg">{{ error }}</p>
-            {% endif %}
             </form>
 
             <div id="stock-info" style="display: none;">
@@ -35,10 +31,20 @@
                 ${{ price }}
                 <form class="show-search" method="POST">
                     <input type="text" id="search-amount" name="search-amount" maxlength="6" size="4" value=1>
-                    <button formaction="{{ url_for('buy_stock.buy_stock', username=username, symbol=symbol, from='search') }}">Buy</button>
+                    <button formaction="{{ url_for('buy_stock.buy_stock', username=username, symbol=symbol, from='search', page='market') }}">Buy</button>
                     <button formaction="{{ url_for('sell_stock.sell_stock', username=username, symbol=symbol, from='search') }}">Sell</button></br>
-                    <button formaction="{{ url_for('save_stock.save_stock', username=username, symbol=symbol) }}">Save</button>
+                    <button formaction="{{ url_for('save_stock.save_stock', username=username, symbol=symbol, from='search') }}">Save</button>
                 </form>
+
+            </div>
+
+            <div class="search-errors">
+                {% if error and isSearch %}
+                <p id="error-msg">{{ error }}</p>
+                {% endif %}
+                {% if success and isSearch %}
+                    <p id="success-msg">Success!</p>
+                {% endif %}
             </div>
 
             <!-- Script for showing and hiding stock info -->
@@ -87,7 +93,6 @@
             function filterShow() {
                 marketDiv.style.display = "none";
                 filterDiv.style.display = "block";
-
                 localStorage.setItem('visibleDivId', 'filterDiv');
             };
         </script>

@@ -13,6 +13,7 @@ class Transaction:
         # Blueprints
         self.update_balance_blueprint = Blueprint('update_balance', __name__)
         self.buy_stock_blueprint = Blueprint('buy_stock', __name__)
+        self.buy_stock_home_blueprint = Blueprint('buy_stock_home', __name__)
         self.sell_stock_blueprint = Blueprint('sell_stock', __name__)
         self.save_stock_blueprint = Blueprint('save_stock', __name__)
         self.search_stock_blueprint = Blueprint('search_stock', __name__)
@@ -45,65 +46,114 @@ class Transaction:
             amount = 0
 
         # Purchase Stock
+        @self.buy_stock_blueprint.route('/buy_stock', defaults={'exchange': {}})
         @self.buy_stock_blueprint.route('/buy_stock', methods=['GET', 'POST'])
         def buy_stock():
+            # GET's User Data
+            username = request.args.get('username')
+            symbol = request.args.get('symbol')
+            source = request.args.get('from')
+            exchange = request.args.get('exchange')
+
+            isSearch = False
+            showStock = False
+
+            if source == 'filter':
+                shares = int(request.form['filter-amount'])
+                companies = self.render_filter(exchange)
+            elif source == 'search':
+                shares = int(request.form['search-amount'])
+                try:
+                    symbol, price, name = self.render_search(symbol)
+                except:
+                    price=None
+                    name=None
+                isSearch = True
+                showStock = True
+                companies = {}
+            else:
+                shares = 0
+
+            if (shares < 0):
+                    return render_template('market.html', username=username, showStock=showStock, error='Invalid Stock Quantity', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
+
+            if self.check_buy(username, symbol, shares):
+                return render_template('market.html', username=username, showStock=showStock, symbol=symbol, companies=companies, exchange=exchange, price=price, name=name, errorSymbol=symbol, success=True, isSearch=isSearch)
+
+            else:
+                return render_template('market.html', username=username, showStock=showStock, error='Insufficient Balance', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
+
+
+        # Purchase Stock
+        @self.buy_stock_home_blueprint.route('/buy_stock_home', methods=['GET', 'POST'])
+        def buy_stock_home():
             # GET's User Data
             username = request.args.get('username')
             acc = Account(username)
             symbol = request.args.get('symbol')
             source = request.args.get('from')
-            if source == 'filter':
-                shares = int(request.form['filter-amount'])
-            elif source == 'search':
-                shares = int(request.form['search-amount'])
-            else:
-                shares = 0
+            page = request.args.get('page')
+            shares = int(request.form['watchlist-amount'])
+
             # Calculates Value of Stocks User Wishes to Buy 
             amount = float(self.api.get_latest_trade(symbol).price) * shares
             if (shares > 0 and shares <= acc.get_balance()):
                 # Updates Owned Stocks in Account Object and DB
                 acc.buy_stock(symbol, shares)
                 acc.withdraw(amount)
-                return redirect(url_for('market', username=username, symbol=symbol, companies={}))
+
+                return redirect(url_for('home', username=username, b=acc.get_balance(), i=acc.get_invest(), stocks=acc.get_stocks(), saved=acc.get_saved(), symbol=symbol))
+
             else:
                 # Error Handling
                 if (shares < 0):
-                    return render_template('market.html', username=username, error='Invalid Stock Quantity', errorSymbol=symbol, companies={})
+                    return render_template('home.html', username=username, error='Invalid Stock Quantity', errorSymbol=symbol, b=acc.get_balance(),
+                                            i=acc.get_invest(), stocks=acc.get_stocks(), saved=acc.get_saved())
                 elif (amount > acc.get_balance()):
-                    return render_template('market.html', username=username, error='Insufficient Balance', errorSymbol=symbol, companies={})
+                    return render_template('home.html', username=username, error='Insufficient Balance', errorSymbol=symbol, b=acc.get_balance(), 
+                                            i=acc.get_invest(), stocks=acc.get_stocks(), saved=acc.get_saved())
+                else:
+                    return render_template('home.html', username=username, error='System Error', errorSymbol=symbol, b=acc.get_balance(), 
+                                            i=acc.get_invest(), stocks=acc.get_stocks(), saved=acc.get_saved())
 
         # Sell Stock
+        @self.sell_stock_blueprint.route('/sell_stock', defaults={'exchange': {}})
         @self.sell_stock_blueprint.route('/sell_stock', methods=['GET', 'POST'])
         def sell_stock():
             # GET's User Data
             username = request.args.get('username')
-            acc = Account(username)
             symbol = request.args.get('symbol')
-
             source = request.args.get('from')
+            exchange = request.args.get('exchange')
+
+            isSearch = False
+            showStock = False
+
             if source == 'filter':
                 shares = int(request.form['filter-amount'])
+                companies = self.render_filter(exchange)
             elif source == 'search':
                 shares = int(request.form['search-amount'])
+                try:
+                    symbol, price, name = self.render_search(symbol)
+                except:
+                    price=None
+                    name=None
+                showStock = True
+                isSearch = True
+                companies = {}
             else:
                 shares = 0
-            # Calculates Value of Stocks User Wishes to Sell 
-            amount = float(self.api.get_latest_trade(symbol).price) * shares
-            print(acc.get_shares(symbol))
-            if (shares <= acc.get_shares(symbol)):
-                # Updates Owned Stocks in Account Object and DB
-                acc.sell_stock(symbol, shares)
-                acc.deposit(amount)
-                return redirect(url_for('market', username=username, symbol=symbol, companies={}))
+
+            if (shares < 0):
+                return render_template('market.html', username=username, showStock=showStock, error='Invalid Stock Quantity', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
+
+            if self.check_sell(username, symbol, shares):
+                return render_template('market.html', username=username, showStock=showStock, symbol=symbol, companies=companies, exchange=exchange, price=price, name=name, errorSymbol=symbol, success=True, isSearch=isSearch)
+
             else:
-                # Error Handling
-                if (shares < 0):
-                    return render_template('market.html', username=username, error='Invalid Stock Quantity', errorSymbol=symbol, companies={})
-                elif (shares > acc.get_shares(symbol)):
-                    return render_template('market.html', username=username, error='Insufficient Shares', errorSymbol=symbol, companies={})
+                return render_template('market.html', username=username, showStock=showStock, error='Insufficient Stock Holdings', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
 
-
-            return redirect(url_for('market'))
 
         # Save Stock
         @self.save_stock_blueprint.route('/save_stock', methods=['GET', 'POST'])
@@ -114,10 +164,26 @@ class Transaction:
             acc = Account(username)
             symbol = request.args.get('symbol')
 
+            source = request.args.get('from')
+            exchange = request.args.get('exchange')
+
+            isSearch = False
+
+            if source == 'filter':
+                companies = self.render_filter(exchange)
+            else:
+                try:
+                    symbol, price, name = self.render_search(symbol)
+                except:
+                    price=None
+                    name=None
+                isSearch = True
+                companies = {}
+
             # Save stock to user's watchlist
             acc.save_stock(symbol)
 
-            return render_template('market.html', username=username, symbol=symbol, companies={})
+            return render_template('market.html', username=username, showStock=True, symbol=symbol, errorSymbol=symbol, price=price, name=name, success=True, isSearch=isSearch, companies=companies)
 
         # Search Stock
         @self.search_stock_blueprint.route('/search_stock', methods=['GET', 'POST'])
@@ -126,15 +192,18 @@ class Transaction:
             username = request.args.get('username')
             symbol = request.form['stock_search'].upper()
 
-            # Checks for if the stock exists. If it does, it displays buy, sell and save options
-            try:
-                get_stock = self.api.get_latest_trade(symbol.upper()).price
-                stock_name = self.api.get_asset(symbol).name
+            get_search = self.render_search(symbol)
 
-                return render_template('market.html', username=username, showStock="True", symbol=symbol.upper(), price=get_stock, name=stock_name, companies={})
-            # Otherwise, an error is outputted
-            except:
-                return render_template('market.html', username=username, error='Stock not found', errorSymbol=symbol, companies={})
+            # Check if error occurs when finding stock
+            if get_search == None:
+                isSearch = True
+                return render_template('market.html', username=username, error='Stock not found', errorSymbol=symbol, isSearch=isSearch, companies={})
+            # Otherwise the stock exists. Displays buy, sell and save options
+            else:
+                symbol = get_search[0]
+                price = get_search[1]
+                name = get_search[2]
+                return render_template('market.html', username=username, showStock=True, symbol=symbol.upper(), price=price, name=name, companies={})
 
         # Filter Stock
         @self.filter_stock_blueprint.route('/filter_stock', methods=['GET', 'POST'])
@@ -142,20 +211,67 @@ class Transaction:
             # GET's User Data
             username = request.args.get('username')
             exchange = request.args.get('exchange')
-            active_assets = self.api.list_assets(status="active")
-            matching_stocks = {}
+            
+            # Get matching stocks and render them
+            matching_stocks = self.render_filter(exchange)
 
-            if exchange == "Any":
-                assets = active_assets
-            else:
-                assets = [a for a in active_assets if a.exchange == exchange]
+            return render_template('market.html', username=username, companies=matching_stocks, exchange=exchange)
+            
 
-            for asset in assets[:50]:
-                try:
-                    price = self.api.get_latest_trade(asset.symbol).price
-                    matching_stocks[asset.symbol] = [asset.name, '{0:.2f}'.format(price)]
-                except:
-                    continue
+    def check_buy(self, username, symbol, shares):
+        # GET's User Data
+        acc = Account(username)
 
+        # Calculates Value of Stocks User Wishes to Buy 
+        amount = float(self.api.get_latest_trade(symbol).price) * shares
+        if (shares > 0 and amount <= acc.get_balance()):
+            acc.buy_stock(symbol, shares)
+            acc.withdraw(amount)
+            
+            return True
+        else:
+            return False
 
-            return render_template('market.html', username=username, companies=matching_stocks)
+    def check_sell(self, username, symbol, shares):
+         # GET's User Data
+        acc = Account(username)
+
+        # Calculates Value of Stocks User Wishes to Buy 
+        amount = float(self.api.get_latest_trade(symbol).price) * shares
+        if (shares > 0 and shares <= acc.get_shares(symbol)):
+            # Updates Owned Stocks in Account Object and DB
+            acc.sell_stock(symbol, shares)
+            acc.deposit(amount)
+            
+            return True
+        else:
+            return False
+    
+    def render_filter(self, exchange):
+        active_assets = self.api.list_assets(status="active")
+        matching_stocks = {}
+
+        if exchange == "Any":
+            assets = active_assets
+        else:
+            assets = [a for a in active_assets if a.exchange == exchange]
+
+        for asset in assets[:50]:
+            try:
+                price = self.api.get_latest_trade(asset.symbol).price
+                matching_stocks[asset.symbol] = [asset.name, '{0:.2f}'.format(price)]
+            except:
+                continue
+
+        return matching_stocks
+
+    def render_search(self, symbol):
+        symbol = symbol.upper()
+
+        try:
+            get_price = self.api.get_latest_trade(symbol.upper()).price
+            get_name = self.api.get_asset(symbol).name
+
+            return symbol, get_price, get_name
+        except:
+            return None

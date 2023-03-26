@@ -24,6 +24,7 @@ app = Flask(__name__)
 transaction = Transaction()
 app.register_blueprint(transaction.update_balance_blueprint)
 app.register_blueprint(transaction.buy_stock_blueprint)
+app.register_blueprint(transaction.buy_stock_home_blueprint)
 app.register_blueprint(transaction.sell_stock_blueprint)
 app.register_blueprint(transaction.save_stock_blueprint)
 app.register_blueprint(transaction.search_stock_blueprint)
@@ -169,6 +170,37 @@ def account():
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
+
+# Delete Account from DB
+@app.route('/del_account')
+def del_account():
+    # print(session)
+    # session.get('username', None)
+    # user = accounts.find({"username" : session.get('username', None)})
+    # pylog(user[0], "USER-PRE")
+    accounts.delete_one({"username" : session.get('username', None)})
+    return redirect(url_for('create'))
+
+# Update Customer Account Data
+@app.route('/account_settings', methods=['GET', 'POST'])
+def account_settings():
+    if request.method == 'POST':
+        if 'changeUsr' in request.form:
+            username = request.form['username']
+            if Authentication.new_user(username):
+                accounts.update_one({"username" : session['username']}, {"$set" : {"username" : username}})
+                session['username'] = username
+
+        elif 'changePass' in request.form:
+            oldPass = request.form['password']
+            newPass = request.form['passwordTwo']
+            if Authentication.new_pass(newPass):
+                acc = accounts.find_one({'username': session['username']})
+                if acc["password"] == oldPass:
+                    accounts.update_one({"username" : session['username']}, {"$set" : {"password" : newPass}})
+
+
+    return render_template('account_settings.html', username=session['username'])
 
 # Routes for Admin Pages
 # Admin Home Page
