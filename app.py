@@ -164,7 +164,6 @@ def account():
 #         acc = accounts.find_one({'username': username})
 #         return render_template('report.html', acc=acc, i=acc['investments'], b=acc['balance'], stocks=acc['stocks'], saved=acc['saved'])
 
-
 # Removes Session When User Logs Out
 @app.route('/logout')
 def logout():
