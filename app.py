@@ -190,6 +190,8 @@ def account_settings():
             if Authentication.new_user(username):
                 accounts.update_one({"username" : session['username']}, {"$set" : {"username" : username}})
                 session['username'] = username
+            else:
+                return render_template('account_settings.html', error='Invalid Username, must be a valid email address')
 
         elif 'changePass' in request.form:
             oldPass = request.form['password']
@@ -198,6 +200,11 @@ def account_settings():
                 acc = accounts.find_one({'username': session['username']})
                 if acc["password"] == oldPass:
                     accounts.update_one({"username" : session['username']}, {"$set" : {"password" : newPass}})
+                else:
+                    return render_template('account_settings.html', error='Password is incorrect')
+   
+            else:
+                return render_template('account_settings.html', error='Invalid Password: Password must contain 1 lowercase, 1 uppercase, and 1 number')
 
 
     return render_template('account_settings.html', username=session['username'])
