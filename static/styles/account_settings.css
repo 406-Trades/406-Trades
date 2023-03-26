@@ -119,3 +119,8 @@
     border-radius:10px;
     padding:10px;
 }
+
+#but:hover{
+    background-color: rgb(47, 47, 47);
+    color: #CECECE;
+}
