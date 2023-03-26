@@ -76,30 +76,53 @@
     width: 20%;
     height: 200%;
 }
+#filter-container{
+    text-align: center;
+}
 .stock-container{
+    display: inline-block;
+    text-align: left;
     clear:both;
     background-color: rgb(212, 212, 212);
-    margin: 0 auto;
     width: 50vw;
-    max-width: 700px;
+    max-width: 750px;
     height:70px;
     border-radius: 25px;
     padding: 25px;
 }
 .stock-form{
+    text-align: center;
     float:right;
     padding-top:10px;
-    width:2%
+    width:20%;
+}
+.stock-form.btn:active {
+    background-color: black;
+}
+#filter-amount{
+    width:90%;
+    border-width:0;
+    margin-bottom: 3%;
 }
 .trading-buttons{
-    width:1%
+    border-width: 0;
+    text-align: center;
+    width: 45%;
+    margin-bottom: 3%;
 }
-.stock-form>input{
-    text-align: right; 
-    float:right;
+/* Buttons to sell/buy/save stocks for each stock div */
+#buy-button{
+    background-color:green;
 }
-.stock-form>button{
-    float:right;
+#sell-button{
+    background-color:red;
+}
+#save-button{
+    width:90%;
+    padding-left: 2px;
+    padding-right: 2px;
+    background-color:aquamarine;
+    border-width: 0;
 }
 .filter-stock{
     display: inline-flex;
@@ -112,26 +135,24 @@
     width:150px;
     font-size: 2rem;
     display: inline;
+    white-space: nowrap;
+    overflow: hidden;
 }
+/* .about-stock{
+    width:50%
+} */
 #company{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 350px;
+    max-width: 20vw;
 }
 #price{
     font-size: 1.5rem;
 }
-/* Buttons to sell/buy stocks for each stock div */
-#buy-button{
-
-}
-#save-button{
-
-}
-#filter-amount{
-
-}
 #error-msg{
     color:red;
+}
+#success-msg{
+    color:green;
 }

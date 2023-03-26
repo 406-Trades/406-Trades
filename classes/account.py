@@ -67,6 +67,12 @@ class Account:
     def get_saved(self):
         return self.saved
     
+    def get_shares(self, symbol):
+        try:
+            return self.stocks[symbol]
+        except:
+            return 0
+    
     # Setter Functions
     # Change Username
     def update_username(self, newUsername):
@@ -94,10 +100,11 @@ class Account:
             newDict = self.stocks
             if (symbol in self.stocks) and (shares < newDict[symbol]):
                 newDict[symbol] -= shares
-            if newDict[symbol] == 0:
-                accounts.delete_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
-            else:
-                accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
+                
+                if newDict[symbol] <= 0:
+                    accounts.delete_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
+                else:
+                    accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
 
     # Save Stock for given Account
     def save_stock(self, symbol):
