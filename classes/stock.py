@@ -23,7 +23,7 @@ class Stock:
     # Returns stock price
     def get_price(self):
         return self.price
-    
+
     # Returns stock name
     def get_symbol(self):
         return self.symbol
