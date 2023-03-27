@@ -98,13 +98,12 @@ class Account:
     def sell_stock(self, symbol, shares):
         if shares > 0:
             newDict = self.stocks
-            if (symbol in self.stocks) and (shares < newDict[symbol]):
+            if (symbol in self.stocks) and (shares <= newDict[symbol]):
                 newDict[symbol] -= shares
-                
+
                 if newDict[symbol] <= 0:
-                    accounts.delete_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
-                else:
-                    accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
+                    del newDict[symbol]
+                accounts.update_one({"username" : self.username}, {"$set" : {"stocks" : newDict}})
 
     # Save Stock for given Account
     def save_stock(self, symbol):

@@ -1,12 +1,13 @@
 /* Body Container for stocks, search */
 .market-container{
-    background: linear-gradient(to bottom right, #00ffff, #ff00ff);
+    text-align: center;
+    background-color: lightgrey;
     margin:0 auto;
-    margin-top:120px;
-    padding:45px;
-    height:50vh;
+    margin-top:5%;
+    padding:1%;
+    height:70vh;
     width:70vw;
-    max-height:500px;
+    max-height:600px;
     max-width:1000px;
     border-radius:35px;
 }
@@ -147,6 +148,37 @@
     text-overflow: ellipsis;
     max-width: 20vw;
 }
+#stock-info{
+    text-align: center;
+}
+.search-buttons{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-width:none;
+}
+#search-symbol{
+    padding-right: 3%;
+    display: inline-block;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+#search-price{
+    font-size: 1.5rem;
+    display: inline-block;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+#search-title{
+    margin-top: 1%;
+}
+
+.chart-div{
+    text-align: center;
+}
+#lineChart{
+    margin: 0 auto;
+}
 #price{
     font-size: 1.5rem;
 }
@@ -155,4 +187,9 @@
 }
 #success-msg{
     color:green;
+}
+
+.time-button{
+    margin-top: 1%;
+    width: 20%;
 }

@@ -1,8 +1,11 @@
 from flask import Flask, Blueprint, render_template, redirect, url_for, request, session, jsonify
 from classes.account import Account
 import alpaca_trade_api as tradeapi
+from alpaca_trade_api.rest import REST, TimeFrame
+from datetime import date
+from datetime import timedelta
+
 import classes.config as config
-import json
 
 class Transaction:
     def __init__(self):
@@ -13,7 +16,7 @@ class Transaction:
         # Blueprints
         self.update_balance_blueprint = Blueprint('update_balance', __name__)
         self.buy_stock_blueprint = Blueprint('buy_stock', __name__)
-        self.buy_stock_home_blueprint = Blueprint('buy_stock_home', __name__)
+        self.home_buy_blueprint = Blueprint('home_buy', __name__)
         self.sell_stock_blueprint = Blueprint('sell_stock', __name__)
         self.save_stock_blueprint = Blueprint('save_stock', __name__)
         self.search_stock_blueprint = Blueprint('search_stock', __name__)
@@ -64,7 +67,7 @@ class Transaction:
             elif source == 'search':
                 shares = int(request.form['search-amount'])
                 try:
-                    symbol, price, name = self.render_search(symbol)
+                    price, name = self.render_search(symbol)
                 except:
                     price=None
                     name=None
@@ -75,24 +78,22 @@ class Transaction:
                 shares = 0
 
             if (shares < 0):
-                    return render_template('market.html', username=username, showStock=showStock, error='Invalid Stock Quantity', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
+                    return render_template('market.html', username=username, showStock=showStock, symbol=symbol, error='Invalid Stock Quantity', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
 
             if self.check_buy(username, symbol, shares):
                 return render_template('market.html', username=username, showStock=showStock, symbol=symbol, companies=companies, exchange=exchange, price=price, name=name, errorSymbol=symbol, success=True, isSearch=isSearch)
 
             else:
-                return render_template('market.html', username=username, showStock=showStock, error='Insufficient Balance', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
+                return render_template('market.html', username=username, showStock=showStock, symbol=symbol, error='Insufficient Balance', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
 
 
         # Purchase Stock
-        @self.buy_stock_home_blueprint.route('/buy_stock_home', methods=['GET', 'POST'])
-        def buy_stock_home():
+        @self.home_buy_blueprint.route('/home_buy', methods=['GET', 'POST'])
+        def home_buy():
             # GET's User Data
             username = request.args.get('username')
             acc = Account(username)
             symbol = request.args.get('symbol')
-            source = request.args.get('from')
-            page = request.args.get('page')
             shares = int(request.form['watchlist-amount'])
 
             # Calculates Value of Stocks User Wishes to Buy 
@@ -102,8 +103,9 @@ class Transaction:
                 acc.buy_stock(symbol, shares)
                 acc.withdraw(amount)
 
-                return redirect(url_for('home', username=username, b=acc.get_balance(), i=acc.get_invest(), stocks=acc.get_stocks(), saved=acc.get_saved(), symbol=symbol))
-
+                # return redirect(url_for('home', username=username, b=acc.get_balance(), i=acc.get_invest(), stocks=acc.get_stocks(), saved=acc.get_saved(), symbol=symbol))
+                return render_template('home.html', username=username, b=acc.get_balance(), i=acc.get_invest(), stocks=acc.get_stocks(), saved=acc.get_saved())
+            
             else:
                 # Error Handling
                 if (shares < 0):
@@ -135,7 +137,7 @@ class Transaction:
             elif source == 'search':
                 shares = int(request.form['search-amount'])
                 try:
-                    symbol, price, name = self.render_search(symbol)
+                    price, name = self.render_search(symbol)
                 except:
                     price=None
                     name=None
@@ -146,13 +148,13 @@ class Transaction:
                 shares = 0
 
             if (shares < 0):
-                return render_template('market.html', username=username, showStock=showStock, error='Invalid Stock Quantity', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
+                return render_template('market.html', username=username, showStock=showStock, symbol=symbol, error='Invalid Stock Quantity', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
 
             if self.check_sell(username, symbol, shares):
                 return render_template('market.html', username=username, showStock=showStock, symbol=symbol, companies=companies, exchange=exchange, price=price, name=name, errorSymbol=symbol, success=True, isSearch=isSearch)
 
             else:
-                return render_template('market.html', username=username, showStock=showStock, error='Insufficient Stock Holdings', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
+                return render_template('market.html', username=username, showStock=showStock, symbol=symbol, error='Insufficient Stock Holdings', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
 
 
         # Save Stock
@@ -173,7 +175,7 @@ class Transaction:
                 companies = self.render_filter(exchange)
             else:
                 try:
-                    symbol, price, name = self.render_search(symbol)
+                    price, name = self.render_search(symbol)
                 except:
                     price=None
                     name=None
@@ -190,20 +192,33 @@ class Transaction:
         def search_stock():
             # GET's User Data
             username = request.args.get('username')
-            symbol = request.form['stock_search'].upper()
+            try:
+                symbol = request.form['stock_search'].upper()
+            except:
+                symbol = request.args.get('symbol')
+            time = request.args.get('time')
 
             get_search = self.render_search(symbol)
 
+            isSearch = True
+
             # Check if error occurs when finding stock
             if get_search == None:
-                isSearch = True
-                return render_template('market.html', username=username, error='Stock not found', errorSymbol=symbol, isSearch=isSearch, companies={})
+                
+                return render_template('market.html', username=username, symbol=symbol, error='Stock not found', errorSymbol=symbol, isSearch=isSearch, companies={}, time=time)
             # Otherwise the stock exists. Displays buy, sell and save options
             else:
-                symbol = get_search[0]
-                price = get_search[1]
-                name = get_search[2]
-                return render_template('market.html', username=username, showStock=True, symbol=symbol.upper(), price=price, name=name, companies={})
+                price = get_search[0]
+                name = get_search[1]
+                get_chart = self.render_chart(symbol, time)
+
+                if get_chart == None:
+                    labels = []
+                    values = []
+                else:
+                    labels, values = get_chart
+
+                return render_template('market.html', username=username, showStock=True, symbol=symbol, price=price, name=name, isSearch=isSearch, companies={}, labels=labels, values=values, showChart=True, time=time)
 
         # Filter Stock
         @self.filter_stock_blueprint.route('/filter_stock', methods=['GET', 'POST'])
@@ -272,6 +287,21 @@ class Transaction:
             get_price = self.api.get_latest_trade(symbol.upper()).price
             get_name = self.api.get_asset(symbol).name
 
-            return symbol, get_price, get_name
+            return get_price, get_name
+        except:
+            return None
+        
+    def render_chart(self, symbol, time):
+        symbol = symbol.upper()
+
+        try:
+            labels = []
+            values = []
+            get_history = self.api.get_bars(symbol, TimeFrame.Day, start=date.today() - timedelta(days = int(time)), end=date.today() - timedelta(days = 1), adjustment='raw')
+            for h in get_history:
+                labels.append(str(h.t)[:10])
+                values.append(round(h.c, 2))
+
+            return labels, values
         except:
             return None

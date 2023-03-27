@@ -18,24 +18,30 @@
         <div class="market-container">
             <form method="POST">
                 <h2>Search for a stock</h2>
-                <label for="stock_search">Search for stock:</label>
                 <input type="text" id="stock_search" name="stock_search">
 
                 <button type="submit" id="search-button" name="search-button" value="Submit" 
-                formaction="{{ url_for('search_stock.search_stock', username=username, symbol=symbol) }}">Search</button>
+                formaction="{{ url_for('search_stock.search_stock', username=username, symbol=symbol, time=30) }}">Search</button>
             </form>
 
+            <hr>
             <div id="stock-info" style="display: none;">
-                {{ symbol }}
-                {{ name }}
-                ${{ price }}
+                <h2 id="search-symbol">{{ symbol }}</h2>
+                <p id="search-price">${{ price }}</p>
+                <p id="search-title">{{ name }}</p>
                 <form class="show-search" method="POST">
                     <input type="text" id="search-amount" name="search-amount" maxlength="6" size="4" value=1>
-                    <button formaction="{{ url_for('buy_stock.buy_stock', username=username, symbol=symbol, from='search', page='market') }}">Buy</button>
-                    <button formaction="{{ url_for('sell_stock.sell_stock', username=username, symbol=symbol, from='search') }}">Sell</button></br>
-                    <button formaction="{{ url_for('save_stock.save_stock', username=username, symbol=symbol, from='search') }}">Save</button>
+                    <div class="search-buttons">
+                        <button id="buy-button" formaction="{{ url_for('buy_stock.buy_stock', username=username, symbol=symbol, from='search') }}">Buy</button>
+                        <button id="sell-button" formaction="{{ url_for('sell_stock.sell_stock', username=username, symbol=symbol, from='search') }}">Sell</button>
+                        <button id="search-button" formaction="{{ url_for('save_stock.save_stock', username=username, symbol=symbol, from='search') }}">Save</button>
+                    </div>
                 </form>
 
+                {% if showChart %}
+                    {% include "chart.html" %}
+                {% endif %}
+                
             </div>
 
             <div class="search-errors">
