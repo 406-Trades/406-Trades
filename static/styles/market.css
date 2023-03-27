@@ -151,8 +151,11 @@
 #stock-info{
     text-align: center;
 }
+#search-amount{
+    display: inline-block;
+}
 .search-buttons{
-    display:flex;
+    display:inline-flex;
     justify-content:center;
     align-items:center;
     border-width:none;
