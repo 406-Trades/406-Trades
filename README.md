@@ -27,7 +27,7 @@ Final project for CPS406 - Introduction to Software Engineering.<br/>
 Professional and responsive flask CRUD app built with python, Alpaca API, and MongoDB. 406-Trades is an online broker for paper trading and investmenting. Simulated capital referencing real-time market data to close the gap between the financial knowledge of Wall Street brokers and the average 
 
 ## Class Diagram
-![Classes](/static/assets/Updated_Class_Diagram.JPG)
+![Classes](/static/assets/Updated_Class_Diagram.png)
 
 ## Visuals
 
