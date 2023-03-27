@@ -4,7 +4,6 @@ from pymongo import MongoClient
 import json
 import alpaca_trade_api as tradeapi
 import classes.config as config
-# from classes.mypylib import log as pylog
 
 # Imported Classes
 from classes.authentication import Authentication
@@ -154,17 +153,6 @@ def account():
     else:
         return render_template('account.html', username=session['username'])
 
-# Generate Report for User in session
-# @app.route("/report", methods=['GET', 'POST'])
-# def report():
-#      # Checks if account is logged it or not
-#     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
-#         return redirect(url_for('login'))
-#     else:
-#         username=session['username']
-#         acc = accounts.find_one({'username': username})
-#         return render_template('report.html', acc=acc, i=acc['investments'], b=acc['balance'], stocks=acc['stocks'], saved=acc['saved'])
-
 # Removes Session When User Logs Out
 @app.route('/logout')
 def logout():
@@ -174,10 +162,6 @@ def logout():
 # Delete Account from DB
 @app.route('/del_account')
 def del_account():
-    # print(session)
-    # session.get('username', None)
-    # user = accounts.find({"username" : session.get('username', None)})
-    # pylog(user[0], "USER-PRE")
     accounts.delete_one({"username" : session.get('username', None)})
     return redirect(url_for('create'))
 
@@ -185,7 +169,9 @@ def del_account():
 @app.route('/account_settings', methods=['GET', 'POST'])
 def account_settings():
     if request.method == 'POST':
+        # Change username
         if 'changeUsr' in request.form:
+            # Get the provided username and modify it
             username = request.form['username']
             if Authentication.new_user(username):
                 accounts.update_one({"username" : session['username']}, {"$set" : {"username" : username}})
@@ -193,7 +179,9 @@ def account_settings():
             else:
                 return render_template('account_settings.html', error='Invalid Username, must be a valid email address')
 
+        # Change password
         elif 'changePass' in request.form:
+            # Get the provided password and modify it
             oldPass = request.form['password']
             newPass = request.form['passwordTwo']
             if Authentication.new_pass(newPass):

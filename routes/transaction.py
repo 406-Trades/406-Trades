@@ -58,18 +58,21 @@ class Transaction:
             source = request.args.get('from')
             exchange = request.args.get('exchange')
 
+            # Booleans for hiding/showing divs
             isSearch = False
             showStock = False
 
+            # Trying to get stock info
             try:
-                price, name = self.render_search(symbol)
+                price, name = self.__render_search(symbol)
             except:
                 price=None
                 name=None
 
+            # Set variables based on if the purchase is from filter or search
             if source == 'filter':
                 shares = int(request.form['filter-amount'])
-                companies = self.render_filter(exchange)
+                companies = self.__render_filter(exchange)
             elif source == 'search':
                 shares = int(request.form['search-amount'])
                 isSearch = True
@@ -78,12 +81,15 @@ class Transaction:
             else:
                 shares = 0
 
+            # Improper amount
             if (shares < 0):
                     return render_template('market.html', username=username, showStock=showStock, symbol=symbol, error='Invalid Stock Quantity', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
 
-            if self.check_buy(username, symbol, shares):
+            # Successful buy
+            if self.__check_buy(username, symbol, shares):
                 return render_template('market.html', username=username, showStock=showStock, symbol=symbol, companies=companies, exchange=exchange, price=price, name=name, errorSymbol=symbol, success=True, isSearch=isSearch)
 
+            # Otherwise there is an error of insufficient balance
             else:
                 return render_template('market.html', username=username, showStock=showStock, symbol=symbol, error='Insufficient Balance', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
 
@@ -129,18 +135,21 @@ class Transaction:
             source = request.args.get('from')
             exchange = request.args.get('exchange')
 
+            # Booleans for hiding/showing divs
             isSearch = False
             showStock = False
 
+            # Trying to get stock info
             try:
-                price, name = self.render_search(symbol)
+                price, name = self.__render_search(symbol)
             except:
                 price=None
                 name=None
 
+            # Set variables based on if the purchase is from filter or search
             if source == 'filter':
                 shares = int(request.form['filter-amount'])
-                companies = self.render_filter(exchange)
+                companies = self.__render_filter(exchange)
             elif source == 'search':
                 shares = int(request.form['search-amount'])
                 showStock = True
@@ -149,12 +158,15 @@ class Transaction:
             else:
                 shares = 0
 
+            # Improper amount
             if (shares < 0):
                 return render_template('market.html', username=username, showStock=showStock, symbol=symbol, error='Invalid Stock Quantity', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
 
-            if self.check_sell(username, symbol, shares):
+            # Successful sell
+            if self.__check_sell(username, symbol, shares):
                 return render_template('market.html', username=username, showStock=showStock, symbol=symbol, companies=companies, exchange=exchange, price=price, name=name, errorSymbol=symbol, success=True, isSearch=isSearch)
 
+            # Otherwise there is an error of insufficient stocks
             else:
                 return render_template('market.html', username=username, showStock=showStock, symbol=symbol, error='Insufficient Stock Holdings', errorSymbol=symbol, price=price, name=name, companies=companies, exchange=exchange, isSearch=isSearch)
 
@@ -164,20 +176,23 @@ class Transaction:
         def save_stock():
             # GET's User Data
             username = request.args.get('username')
-
             acc = Account(username)
+
+            # Get variables to save the stock and show the page again
             symbol = request.args.get('symbol')
 
             source = request.args.get('from')
             exchange = request.args.get('exchange')
 
+            # Booleans for hiding/showing divs
             isSearch = False
 
+            # Set variables based on if the purchase is from filter or search
             if source == 'filter':
-                companies = self.render_filter(exchange)
+                companies = self.__render_filter(exchange)
             else:
                 try:
-                    price, name = self.render_search(symbol)
+                    price, name = self.__render_search(symbol)
                 except:
                     price=None
                     name=None
@@ -187,6 +202,7 @@ class Transaction:
             # Save stock to user's watchlist
             acc.save_stock(symbol)
 
+            # Render the page again
             return render_template('market.html', username=username, showStock=True, symbol=symbol, errorSymbol=symbol, price=price, name=name, success=True, isSearch=isSearch, companies=companies)
 
         # Search Stock
@@ -194,25 +210,29 @@ class Transaction:
         def search_stock():
             # GET's User Data
             username = request.args.get('username')
+
+            # Get symbol from appropriate location
             try:
                 symbol = request.form['stock_search'].upper()
             except:
                 symbol = request.args.get('symbol')
+
+            # Get variables
             time = request.args.get('time')
+            get_search = self.__render_search(symbol)
 
-            get_search = self.render_search(symbol)
-
+            # Booleans for hiding/showing divs
             isSearch = True
 
             # Check if error occurs when finding stock
             if get_search == None:
-                
                 return render_template('market.html', username=username, symbol=symbol, error='Stock not found', errorSymbol=symbol, isSearch=isSearch, companies={}, time=time)
+            
             # Otherwise the stock exists. Displays buy, sell and save options
             else:
                 price = get_search[0]
                 name = get_search[1]
-                get_chart = self.render_chart(symbol, time)
+                get_chart = self.__render_chart(symbol, time)
 
                 if get_chart == None:
                     labels = []
@@ -230,12 +250,12 @@ class Transaction:
             exchange = request.args.get('exchange')
             
             # Get matching stocks and render them
-            matching_stocks = self.render_filter(exchange)
+            matching_stocks = self.__render_filter(exchange)
 
             return render_template('market.html', username=username, companies=matching_stocks, exchange=exchange)
             
-
-    def check_buy(self, username, symbol, shares):
+    # Check that buying is successful
+    def __check_buy(self, username, symbol, shares):
         # GET's User Data
         acc = Account(username)
 
@@ -249,7 +269,8 @@ class Transaction:
         else:
             return False
 
-    def check_sell(self, username, symbol, shares):
+    # Check that selling is successful
+    def __check_sell(self, username, symbol, shares):
          # GET's User Data
         acc = Account(username)
 
@@ -264,15 +285,19 @@ class Transaction:
         else:
             return False
     
-    def render_filter(self, exchange):
+    # Get needed values for filter page
+    def __render_filter(self, exchange):
+        # Get active stocks
         active_assets = self.api.list_assets(status="active")
         matching_stocks = {}
 
+        # Pick the matching stocks
         if exchange == "Any":
             assets = active_assets
         else:
             assets = [a for a in active_assets if a.exchange == exchange]
 
+        # Go through the first 50 stocks and create a dictionary to return
         for asset in assets[:50]:
             try:
                 price = self.api.get_latest_trade(asset.symbol).price
@@ -282,9 +307,13 @@ class Transaction:
 
         return matching_stocks
 
-    def render_search(self, symbol):
+    # Get needed values for search page
+    def __render_search(self, symbol):
+        # Get upper symbol
         symbol = symbol.upper()
 
+        # Try to find the stock
+        # If stock found, return values, otherwise return None
         try:
             get_price = self.api.get_latest_trade(symbol.upper()).price
             get_name = self.api.get_asset(symbol).name
@@ -293,9 +322,13 @@ class Transaction:
         except:
             return None
         
-    def render_chart(self, symbol, time):
+    # Get needed values for making the chart
+    def __render_chart(self, symbol, time):
+        # Get upper symbol
         symbol = symbol.upper()
 
+        # Try to dates and closing prices of specified time (a year or a month) and return them
+        # Otherwise return none
         try:
             labels = []
             values = []

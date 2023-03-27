@@ -47,7 +47,6 @@
     font-size: 2rem;
     line-height: 43px;
     overflow-y: scroll;
-    /* padding-top:15px; */
     padding-bottom:15px;
 }
 /* Scroll Bar Styling */
@@ -135,7 +134,7 @@
 .header{
     color: #CECECE
 }
-
+/* Red error messages */
 #error-msg{
     color:rgb(246, 75, 75);
 }

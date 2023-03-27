@@ -24,7 +24,10 @@
                 formaction="{{ url_for('search_stock.search_stock', username=username, symbol=symbol, time=30) }}">Search</button>
             </form>
 
+            <!-- Line -->
             <hr>
+
+            <!-- Container for stock info -->
             <div id="stock-info" style="display: none;">
                 <h2 id="search-symbol">{{ symbol }}</h2>
                 <p id="search-price">${{ price }}</p>
@@ -38,12 +41,14 @@
                     </div>
                 </form>
 
+                <!-- Depending on if chart variable is true, display chart.html -->
                 {% if showChart %}
                     {% include "chart.html" %}
                 {% endif %}
                 
             </div>
 
+            <!-- Display any errors or success if needed -->
             <div class="search-errors">
                 {% if error and isSearch %}
                 <p id="error-msg">{{ error }}</p>

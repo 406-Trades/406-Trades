@@ -18,6 +18,7 @@
                 </div>
             </div>
 
+            <!-- Form for buttons for changing balance -->
             <form class="form" method="POST" action="{{ url_for('update_balance.update_balance', username=username, b=b) }}">
                 <label id="form-subtitle">Update Balance:</label>
                 <input class="form-input" type="text" id="amount" name="amount" placeholder="$0.00" size="6"><br>
