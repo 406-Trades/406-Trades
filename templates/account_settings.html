@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!doctype html>
+<html>
+  <head>
+    <title>Account Settings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/account_settings.css') }}">
+  </head>
+  <body>
+    <div class="container">
+    <h1 class="header">Account Settings</h1>
+    <div class="container-box">
+    <form id="form" method="post" align="center">
+      <h2 style="color: black;">Change Username</h2>
+      <input class="but" type="text" name="username" placeholder="New Username"> &nbsp;
+      <input id="but" type="submit" value="Change" name="changeUsr"><br>
+    </form>
+
+    <form id="form" method="post" align="center">
+      <h2 style="color: black;">Change Password</h2>
+      <input class="but" type="password" name="password" placeholder="Old Password"> &nbsp;
+      <input class="but" type="password" name="passwordTwo" placeholder="New Password"> &nbsp;
+      <input id="but" type="submit" value="Change" name="changePass"><br>
+    </form>
+
+    {% if error %}
+      <p id="error-msg">{{ error }}</p>
+    {% endif %}
+</div>
+</div>
+  </body>
+</html>
+
+{% endblock %}  

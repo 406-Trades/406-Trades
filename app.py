@@ -4,7 +4,7 @@ from pymongo import MongoClient
 import json
 import alpaca_trade_api as tradeapi
 import classes.config as config
-from classes.mypylib import log as pylog
+# from classes.mypylib import log as pylog
 
 # Imported Classes
 from classes.authentication import Authentication
@@ -15,6 +15,7 @@ from classes.stock import Stock
 # Blueprints for Flask routes
 from routes.transaction import Transaction
 from routes.admin_access import Admin_Access
+from routes.report import Report
 
 # Configure App
 app = Flask(__name__) 
@@ -32,6 +33,8 @@ admin_access = Admin_Access()
 app.register_blueprint(admin_access.edit_account_blueprint)
 app.register_blueprint(admin_access.stock_authenticate_blueprint)
 app.register_blueprint(admin_access.account_authenticate_blueprint)
+report = Report()
+app.register_blueprint(report.generate_report_blueprint)
 
 # # Connect to the Alpaca API
 # api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
@@ -152,16 +155,15 @@ def account():
         return render_template('account.html', username=session['username'])
 
 # Generate Report for User in session
-@app.route("/report", methods=['GET', 'POST'])
-def report():
-     # Checks if account is logged it or not
-    if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
-        return redirect(url_for('login'))
-    else:
-        username=session['username']
-        acc = accounts.find_one({'username': username})
-        return render_template('report.html', acc=acc, i=acc['investments'], b=acc['balance'], stocks=acc['stocks'], saved=acc['saved'])
-
+# @app.route("/report", methods=['GET', 'POST'])
+# def report():
+#      # Checks if account is logged it or not
+#     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
+#         return redirect(url_for('login'))
+#     else:
+#         username=session['username']
+#         acc = accounts.find_one({'username': username})
+#         return render_template('report.html', acc=acc, i=acc['investments'], b=acc['balance'], stocks=acc['stocks'], saved=acc['saved'])
 
 # Removes Session When User Logs Out
 @app.route('/logout')
@@ -188,6 +190,8 @@ def account_settings():
             if Authentication.new_user(username):
                 accounts.update_one({"username" : session['username']}, {"$set" : {"username" : username}})
                 session['username'] = username
+            else:
+                return render_template('account_settings.html', error='Invalid Username, must be a valid email address')
 
         elif 'changePass' in request.form:
             oldPass = request.form['password']
@@ -196,6 +200,11 @@ def account_settings():
                 acc = accounts.find_one({'username': session['username']})
                 if acc["password"] == oldPass:
                     accounts.update_one({"username" : session['username']}, {"$set" : {"password" : newPass}})
+                else:
+                    return render_template('account_settings.html', error='Password is incorrect')
+   
+            else:
+                return render_template('account_settings.html', error='Invalid Password: Password must contain 1 lowercase, 1 uppercase, and 1 number')
 
 
     return render_template('account_settings.html', username=session['username'])
