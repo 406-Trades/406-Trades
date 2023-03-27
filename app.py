@@ -35,10 +35,6 @@ app.register_blueprint(admin_access.account_authenticate_blueprint)
 report = Report()
 app.register_blueprint(report.generate_report_blueprint)
 
-# # Connect to the Alpaca API
-# api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
-# headers = {'APCA-API-KEY-ID': config.API_KEY, 'APCA-API-SECRET-KEY': config.SECRET_KEY}
-
 # Connect to MongoDB with Accounts
 cluster = MongoClient("mongodb+srv://Abhari:Abhari@cluster0.pqgawmw.mongodb.net/?retryWrites=true&w=majority")
 db = cluster["406-Trades"]
