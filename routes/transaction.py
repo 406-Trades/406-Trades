@@ -61,16 +61,17 @@ class Transaction:
             isSearch = False
             showStock = False
 
+            try:
+                price, name = self.render_search(symbol)
+            except:
+                price=None
+                name=None
+
             if source == 'filter':
                 shares = int(request.form['filter-amount'])
                 companies = self.render_filter(exchange)
             elif source == 'search':
                 shares = int(request.form['search-amount'])
-                try:
-                    price, name = self.render_search(symbol)
-                except:
-                    price=None
-                    name=None
                 isSearch = True
                 showStock = True
                 companies = {}
@@ -131,16 +132,17 @@ class Transaction:
             isSearch = False
             showStock = False
 
+            try:
+                price, name = self.render_search(symbol)
+            except:
+                price=None
+                name=None
+
             if source == 'filter':
                 shares = int(request.form['filter-amount'])
                 companies = self.render_filter(exchange)
             elif source == 'search':
                 shares = int(request.form['search-amount'])
-                try:
-                    price, name = self.render_search(symbol)
-                except:
-                    price=None
-                    name=None
                 showStock = True
                 isSearch = True
                 companies = {}
