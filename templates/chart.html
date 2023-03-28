@@ -1,0 +1,47 @@
+{% block content %}
+<!-- Page that generates a chart using Chart.js -->
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title></title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    </head>
+    <body>
+        <!-- Specifying chart options and values -->
+        <div class="chart-div">
+            <canvas id="lineChart" width="600" height="300"></canvas>
+            <script>
+                Chart.defaults.global.legend.display = false;
+                var chart_type = document.getElementById("lineChart").getContext("2d");
+                const labels = {{ labels | safe }};
+                const values = {{ values | safe }};
+                var chart = new Chart(chart_type, {
+                    type: "line",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                                data: values,
+                                fill: false,
+                                borderColor: "rgb(0, 0, 0)",
+                                lineTension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: false
+                    }
+                });
+            </script>
+
+            <!-- Buttons to change chart time span -->
+            <form method="POST">
+                <button class="time-button" formaction="{{ url_for('search_stock.search_stock', username=username, symbol=symbol, time=30) }}">1 Month</button>
+                <button class="time-button" formaction="{{ url_for('search_stock.search_stock', username=username, symbol=symbol, time=365) }}">1 Year</button>
+
+            </form>
+        </div>
+    </body>
+
+    </html>
+{% endblock %}

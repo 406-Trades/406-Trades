@@ -8,6 +8,7 @@ api = tradeapi.REST(config.API_KEY, config.SECRET_KEY)
 headers = {'APCA-API-KEY-ID': config.API_KEY, 'APCA-API-SECRET-KEY': config.SECRET_KEY}
 
 class Stock:
+    # Initializing the stock
     def __init__ (self, symbol):
         self.symbol = symbol
         self.price = api.get_latest_trade(symbol).price
@@ -23,7 +24,7 @@ class Stock:
     # Returns stock price
     def get_price(self):
         return self.price
-    
+
     # Returns stock name
     def get_symbol(self):
         return self.symbol

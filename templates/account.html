@@ -1,26 +1,39 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<!-- Account page -->
 <!doctype html>
 <html>
-    <head> 
-    </head>
-    <body>
-        <div style="width: 60vw; position: absolute; left: 50%; transform: translate(-50%, 0%); padding-top: 20px;">
-            <h1>Account</h1>
-            <p><i>Logged in as {{username}}</i></p>
-            <a href="/logout">Logout</a><br><br>
+<head> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/account.css') }}">
+	<title>Account</title>
+</head>
+<body>
+    <!-- Buttons for user selectio -->
+	<div class="container">
+        <!-- Logout -->
+		<a href="/logout" class="logout">Logout</a>
+        <!-- Account Settings -->
+        <a href="/account_settings" class="settings">Account Settings</a>
+		<h1 class="header">Account</h1>
+        <div class="container-box">
+            <form id ='form' method="GET">     
+                <h2 style="color: black;"> Hello {{ username }}</h2>
+                {% if error %}
+                    <p id="error-msg">{{ error }}</p>
+                {% endif %}
+            </form> 
+            <form action="/report" method="POST">
+                <div style="text-align: center;">
+                    <!-- Generate Report -->
+                    <button class="generate-report" type="submit">Generate Report</button>
+                </div>
+            </form>
+            <!-- Delete Account -->
+            <a href="/del_account" class="delete">Delete Account</a>
 
-            <div style="text-align: center;">
-                <h2>Generate Report</h2>
-                <form action = "/report" method="POST">
-                    <p>
-                       <input type = "submit" value = "Generate">
-                    </p>
-                 </form>
             </div>
-        </div>
-
-    </body>
+	</div>
+</body>
 </html>
 {% endblock %}

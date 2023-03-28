@@ -18,6 +18,7 @@
                 </div>
             </div>
 
+            <!-- Form for buttons for changing balance -->
             <form class="form" method="POST" action="{{ url_for('update_balance.update_balance', username=username, b=b) }}">
                 <label id="form-subtitle">Update Balance:</label>
                 <input class="form-input" type="text" id="amount" name="amount" placeholder="$0.00" size="6"><br>
@@ -46,10 +47,10 @@
             {% for symbol in saved %}
             <div class="saved-stock">
                 <div id="symbol">{{ symbol }} </div>
-                <form class="stock-form" method="POST" action="{{ url_for('buy_stock.buy_stock', username=username, symbol=symbol) }}">
+                <form class="stock-form" method="POST">
                     <label id="sub-title">Shares: </label>
-                    <input type="text" id="buy-amount" name="buy-amount" maxlength="6" size="4" value=1>
-                    <button type="submit" id="{{ symbol }}" class="buy-button" name="buy-button" value="Buy">Buy</button>
+                    <input type="text" id="watchlist-amount" name="watchlist-amount" maxlength="6" size="4" value=1>
+                    <button type="submit" id="{{ symbol }}" class="buy-button" name="buy-button" value="Buy" formaction="{{ url_for('home_buy.home_buy', username=username, symbol=symbol) }}">Buy</button>
                     {% if error and symbol == errorSymbol %}
                         <style>#{{ symbol }} {border: 1px solid red;}</style>
                     {% endif %}

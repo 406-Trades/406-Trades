@@ -1,39 +1,83 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<!-- FAQ page -->
 <!doctype html>
 <html>
     <head>
         <title>FAQ Page</title>
+        <style>
+            .bubble {
+                position: relative;
+                display: inline-block;
+                background-color: #f0f0f0;
+                padding: 10px;
+                border-radius: 15px;
+                margin-bottom: 20px;
+                margin-right: 20px;
+            }
+            
+            .bubble:after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                right: -10px;
+                margin-top: -10px;
+                border-style: solid;
+                border-width: 10px 0 10px 10px;
+                border-color: transparent transparent transparent #f0f0f0;
+            }
+            
+            h1 {
+                text-align: center; /* center the FAQ header */
+                margin-top: 30px;
+                position: relative;
+            }
+            
+            h1::after {
+                content: "";
+                display: block;
+                height: 3px;
+                width: 80%;
+                background-color: #ccc;
+                position: absolute;
+                bottom: -5px;
+                left: 10%;
+            }
+        </style>
     </head>
     <body>
         <div style="width: 60vw; position: absolute; left: 50%; transform: translate(-50%, 0%); padding-top: 20px;">
-        <h1>FAQ</h1>
-        <h2>How do I create an account?</h2>
-        <p>1. On the splash page, click “Create Account”.</p>
-        <p>2. Enter a valid email address and a secure password.</p>
-        <p>3. Enter your password again to confirm.</p>
-        <p>4. Click “Create”.</p>
         
-        <h2>How do I search for a specific stock?</h2>
-        <p>1. Login, then from the home page, click on the "Market" tab in the top menu.</p>
-        <p>2. Click on "Search" to display the search screen.</p>
-        <p>3. Type the name of the desired stock in the search bar. </p>
+        <div class="bubble">
+            <h1>FAQ</h1>
+            <h2>How do I create an account?</h2>
+            <p>1. On the splash page, click “Create Account”.</p>
+            <p>2. Enter a valid email address and a secure password.</p>
+            <p>3. Enter your password again to confirm.</p>
+            <p>4. Click “Create”.</p>
         
-        <h2>How can I buy/save a stock from the top 100?</h2>
-        <p>1. Login, then from the home page, click on the "Market" tab in the top menu.</p>
-        <p>2. Click "Top 100" to display the NASDAQ 100 Companies.</p>
-        <p>3. In the desired stock, set the desired quantity of shares.</p>
-        <p>4. Click "Buy" or "Save". If successful, the investment will appear in your portfolio on the "Home" page.</p>
         
-        <h2>How can I deposit/withdraw funds?</h2>
-        <p>1. Login, then go to the “Home” page.</p>
-        <p>2. Under your balance tracker, enter the amount of funds you want to withdraw/deposit.</p>
-        <p>3. Click “Increment Balance” to deposit. Click “Decrement Balance” to withdraw.</p>
+            <h2>How do I search for a specific stock?</h2>
+            <p>1. Login, then from the home page, click on the "Market" icon in the top menu (looks like a graph).</p>
+            <p>2. Click on "Search" to display the search screen.</p>
+            <p>3. Type the name of the desired stock in the search bar. </p>
+        
+        
+            <h2>How can I buy/save a stock from the top 100?</h2>
+            <p>1. Login, then from the home page, click on the "Market" icon in the top menu (looks like a graph).</p>
+            <p>2. Click "Top 100" to display the NASDAQ 100 Companies.</p>
+            <p>3. In the desired stock, set the desired quantity of shares.</p>
+            <p>4. Click "Buy" or "Save". If successful, the investment will appear in your portfolio on the "Home" page.</p>
+        
+        
+            <h2>How can I deposit/withdraw funds?</h2>
+            <p>1. Login, then go to the “Home” page.</p>
+            <p>2. Under your balance tracker, enter the amount of funds you want to withdraw/deposit.</p>
+            <p>3. Click “Increment Balance” to deposit. Click “Decrement Balance” to withdraw.</p>
+        </div>
         </div>
 
     </body>
 </html>
 {% endblock %}
-
-

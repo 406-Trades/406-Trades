@@ -1,12 +1,13 @@
 /* Body Container for stocks, search */
 .market-container{
-    background: linear-gradient(to bottom right, #00ffff, #ff00ff);
+    text-align: center;
+    background-color: lightgrey;
     margin:0 auto;
-    margin-top:120px;
-    padding:45px;
-    height:50vh;
+    margin-top:5%;
+    padding:1%;
+    height:70vh;
     width:70vw;
-    max-height:500px;
+    max-height:600px;
     max-width:1000px;
     border-radius:35px;
 }
@@ -25,11 +26,11 @@
     margin-right:25px;
     border: none;
     outline: none;
-    background-color: #ffffff; 
+    background-color: darkgrey; 
     color: #000000;
     box-shadow: 4px 4px 4px -2px rgba(0, 0, 0, 0.25);
 }
-#show-nasdaq{
+#show-filter{
     width:200px;
     margin-left:30px;
     padding:15px;
@@ -37,7 +38,7 @@
     margin-left:22px;
     border: none;
     outline: none;
-    background-color: #ffffff; 
+    background-color: darkgrey; 
     color: #000000;
     box-shadow: -4px 4px 4px -2px rgba(0, 0, 0, 0.25);
 }
@@ -50,61 +51,146 @@
     cursor: pointer;
     background-color: #efefef81;
 }
-#show-nasdaq:hover{
+#show-filter:hover{
     cursor: pointer;
     background-color: #efefef81;
 }
 /* Search Div Styling */
 
-/* Top 100 Stocks */
-.Top100-Title{
+/* Filter */
+.filter-Title{
     text-align: center;
+    color: lightgrey;
 }
-.nasdaq-stock-container{
-    background-color: rgb(212, 212, 212);
+.choice-container{
+    text-align: center;
+    background-color: darkgray;
     margin: 0 auto;
     width: 50vw;
     max-width: 700px;
+    height:30px;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 2%;
+}
+.choice-button{
+    width: 20%;
+    height: 200%;
+}
+#filter-container{
+    text-align: center;
+}
+.stock-container{
+    display: inline-block;
+    text-align: left;
+    clear:both;
+    background-color: rgb(212, 212, 212);
+    width: 50vw;
+    max-width: 750px;
     height:70px;
     border-radius: 25px;
     padding: 25px;
-    /* display: flex; */
 }
 .stock-form{
+    text-align: center;
     float:right;
     padding-top:10px;
+    width:20%;
 }
-.stock-form>input{
-    text-align: right; 
-    float:right;
+.stock-form.btn:active {
+    background-color: black;
 }
-.stock-form>button{
-    float:right;
+#filter-amount{
+    width:90%;
+    border-width:0;
+    margin-bottom: 3%;
 }
-.nasdaq-stock{
-    display: flex;
+.trading-buttons{
+    border-width: 0;
+    text-align: center;
+    width: 45%;
+    margin-bottom: 3%;
+}
+/* Buttons to sell/buy/save stocks for each stock div */
+#buy-button{
+    background-color:green;
+}
+#sell-button{
+    background-color:red;
+}
+#save-button{
+    width:90%;
+    padding-left: 2px;
+    padding-right: 2px;
+    background-color:aquamarine;
+    border-width: 0;
+}
+.filter-stock{
+    display: inline-flex;
     float:left;
 }
-.nasdaq-stock>h2{
+.filter-stock>h2{
     margin-right:25px;
 }
 #symbol{
-    width:180px;
+    width:150px;
     font-size: 2rem;
+    display: inline;
+    white-space: nowrap;
+    overflow: hidden;
 }
+
 #company{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 20vw;
+}
+#stock-info{
+    text-align: center;
+}
+#search-amount{
+    display: inline-block;
+}
+.search-buttons{
+    display:inline-flex;
+    justify-content:center;
+    align-items:center;
+    border-width:none;
+}
+#search-symbol{
+    padding-right: 3%;
+    display: inline-block;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+#search-price{
     font-size: 1.5rem;
+    display: inline-block;
+    margin-top: 1%;
+    margin-bottom: 1%;
 }
-/* Buttons to sell/buy stocks for each stock div */
-#buy-button{
-
+#search-title{
+    margin-top: 1%;
 }
-#save-button{
 
+.chart-div{
+    text-align: center;
 }
-#nasdaq-amount{
-
+#lineChart{
+    margin: 0 auto;
+}
+#price{
+    font-size: 1.5rem;
 }
 #error-msg{
     color:red;
+}
+#success-msg{
+    color:green;
+}
+
+.time-button{
+    margin-top: 1%;
+    width: 20%;
 }
