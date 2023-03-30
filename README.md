@@ -33,7 +33,7 @@ Professional and responsive flask CRUD app built with python, Alpaca API, and Mo
 
 ## References
 https://alpaca.markets/docs/<br/>
-https://www.mongodb.com
+https://www.mongodb.com <br/>
 https://flask.palletsprojects.com/en/2.2.x/
 
 ## Credits
