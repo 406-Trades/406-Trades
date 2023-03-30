@@ -4,6 +4,7 @@ from pymongo import MongoClient
 import json
 import alpaca_trade_api as tradeapi
 import classes.config as config
+import os
 
 # Imported Classes
 from classes.authentication import Authentication
@@ -42,6 +43,18 @@ accounts = db["Accounts"]
 
 # Session key
 app.secret_key = '406-trades'
+
+def create_app(test_config=None):
+    app.config.from_mapping(
+        SECRET_KEY='testing',
+        DATABASE=os.path.join(app.instance_path, 'stocks.sqlite'),
+    )
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
+    return app
 
 # Login Redirect Everytime User Opens The Website
 @app.route('/')

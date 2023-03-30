@@ -1,5 +1,5 @@
 import unittest
-from stocks import app
+from app import app
 
 class TestApp(unittest.TestCase):
     
