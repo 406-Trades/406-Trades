@@ -18,7 +18,7 @@ Run App:
 
 ## Build
 Front-end developed with Flask framework, HTML, CSS.<br/>
-Back-end developed using python.<br/>
+Back-end developed using python and Flask.<br/>
 Database used for this project is MongoDB.<br/>
 Alpaca API was used for accessing real-world stock market data.
 
@@ -33,7 +33,7 @@ Professional and responsive flask CRUD app built with python, Alpaca API, and Mo
 
 ## References
 https://alpaca.markets/docs/<br/>
-https://www.mongodb.com
+https://www.mongodb.com <br/>
 https://flask.palletsprojects.com/en/2.2.x/
 
 ## Credits
