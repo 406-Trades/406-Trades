@@ -72,9 +72,17 @@ class Transaction:
             # Set variables based on if the purchase is from filter or search
             if source == 'filter':
                 shares = int(request.form['filter-amount'])
+                try:
+                    shares = int(request.form['filter-amount'])
+                except:
+                    shares = -1
                 companies = self.__render_filter(exchange)
             elif source == 'search':
                 shares = int(request.form['search-amount'])
+                try:
+                    shares = int(request.form['search-amount'])
+                except:
+                    shares = -1
                 isSearch = True
                 showStock = True
                 companies = {}
@@ -148,10 +156,17 @@ class Transaction:
 
             # Set variables based on if the purchase is from filter or search
             if source == 'filter':
-                shares = int(request.form['filter-amount'])
+                try:
+                    shares = int(request.form['filter-amount'])
+                except:
+                    shares = -1
                 companies = self.__render_filter(exchange)
             elif source == 'search':
                 shares = int(request.form['search-amount'])
+                try:
+                    shares = int(request.form['search-amount'])
+                except:
+                    shares = -1
                 showStock = True
                 isSearch = True
                 companies = {}
