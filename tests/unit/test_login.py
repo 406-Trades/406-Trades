@@ -21,13 +21,11 @@ def test_login():
     
     with app.test_client() as client:
 
-        response = client.post('/login', data=dict(username='Email@email.com', password='Test123'))
-
-        print(response.location)
+        response = client.post('/login', data=dict(username='Email@email.com', password='Test1234'))
 
         # assert response.status_code == 200
-        assert b"Portfolio" in response.data
-        # assert response.location == 'http://127.0.0.1:5000/home'
+        # assert b"Portfolio" in response.data
+        assert response.location == '/home'
 
 def test_incorrect_login():
     with app.test_client() as client:
