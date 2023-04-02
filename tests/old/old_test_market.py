@@ -27,6 +27,7 @@ def client():
 
         yield client
 
+# Testing market search with a valid stock
 def test_search_aapl(client):
     aSymbol = 'AAPL'
 
@@ -43,4 +44,20 @@ def test_search_aapl(client):
             assert response.status_code == 200
             assert session.get('username') == 'Email@email.com'
             assert bytes(get_price, encoding='utf8') in response.data
-            assert b"AAPL" in response.data
+            assert bytes(aSymbol, encoding='utf8') in response.data
+
+# Testing market search with a non-valid stock
+def test_search_fake(client):
+    aSymbol = 'fake'
+
+    with client.session_transaction() as session:
+        with app.test_request_context():
+
+            flask_app = create_app('flask_test.cfg')
+
+            response = flask_app.test_client().post(url_for('search_stock.search_stock', username=session.get('username'), symbol=aSymbol, time=30),
+                                                       content_type='text', follow_redirects=True)
+
+            assert response.status_code == 200
+            assert session.get('username') == 'Email@email.com'
+            assert b'Stock not found' in response.data

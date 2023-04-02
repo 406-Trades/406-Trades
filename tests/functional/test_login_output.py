@@ -23,8 +23,7 @@ def test_login():
 
         response = client.post('/login', data=dict(username='Email@email.com', password='Test1234'))
 
-        # assert response.status_code == 200
-        # assert b"Portfolio" in response.data
+        assert response.status_code == 302
         assert response.location == '/home'
 
 def test_incorrect_login():
