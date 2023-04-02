@@ -16,6 +16,14 @@ Clone Repo:
 Run App:
 > py app.py
 
+Enter in browser: 
+>http://127.0.0.1:5000/
+
+Run Tests:
+> pip install pytest
+
+> python -m pytest -vv
+
 ## Build
 Front-end developed with Flask framework, HTML, CSS.<br/>
 Back-end developed using python and Flask.<br/>
