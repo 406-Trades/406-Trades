@@ -14,14 +14,14 @@ Clone Repo:
 > git clone https://github.com/406-Trades/406-Trades.git
 
 Run App:
->pip install pytest
-
 > py app.py
 
 Enter in browser: 
 >http://127.0.0.1:5000/
 
 Run Tests:
+> pip install pytest
+
 > python -m pytest -vv
 
 ## Build
