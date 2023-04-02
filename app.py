@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for, redirect, render_template, session
+from flask import Flask, request, url_for, redirect, render_template, session, Blueprint
 import pymongo
 from pymongo import MongoClient
 import json
@@ -217,9 +217,11 @@ def admin():
         return redirect(url_for('home', username=session['username']))
     
 # Round floats to 2 Decimals --> $XXXX.XX
-@app.template_filter('price')
+# @app.template_filter('price')
 def format_price(value):
     return f"${value:,.2f}"
+
+app.jinja_env.filters['price'] = format_price
 
 if __name__ == "__main__":
     app.run()

@@ -72,9 +72,17 @@ class Transaction:
             # Set variables based on if the purchase is from filter or search
             if source == 'filter':
                 shares = int(request.form['filter-amount'])
+                try:
+                    shares = int(request.form['filter-amount'])
+                except:
+                    shares = -1
                 companies = self.__render_filter(exchange)
             elif source == 'search':
                 shares = int(request.form['search-amount'])
+                try:
+                    shares = int(request.form['search-amount'])
+                except:
+                    shares = -1
                 isSearch = True
                 showStock = True
                 companies = {}
@@ -148,10 +156,17 @@ class Transaction:
 
             # Set variables based on if the purchase is from filter or search
             if source == 'filter':
-                shares = int(request.form['filter-amount'])
+                try:
+                    shares = int(request.form['filter-amount'])
+                except:
+                    shares = -1
                 companies = self.__render_filter(exchange)
             elif source == 'search':
                 shares = int(request.form['search-amount'])
+                try:
+                    shares = int(request.form['search-amount'])
+                except:
+                    shares = -1
                 showStock = True
                 isSearch = True
                 companies = {}
@@ -219,7 +234,6 @@ class Transaction:
 
             # Get variables
             time = request.args.get('time')
-
             get_search = self.__render_search(symbol)
 
             # Booleans for hiding/showing divs
@@ -311,12 +325,12 @@ class Transaction:
     # Get needed values for search page
     def __render_search(self, symbol):
         # Get upper symbol
-        symbol = symbol
+        symbol = symbol.upper()
 
         # Try to find the stock
         # If stock found, return values, otherwise return None
         try:
-            get_price = self.api.get_latest_trade(symbol).price
+            get_price = self.api.get_latest_trade(symbol.upper()).price
             get_name = self.api.get_asset(symbol).name
 
             return get_price, get_name
