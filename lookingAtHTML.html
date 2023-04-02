@@ -1,10 +1,68 @@
-<!-- Login page with option to create account -->\n<!doctype html>
-<html>\n  
-    <head>\n    
-        <title>Login
+<!-- Base layout for pages -->
+<!doctype html>
+<html>
+<head>
+    <title>406-Trades</title>
+    <link rel="icon" href="/static//assets/logo-small.jpeg">
+    <link rel="stylesheet" href="/static/styles/layout.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <nav class="navbar-container">
+        <a href="/">
+            <img src="/static/assets/logo-small.jpeg" align="middle" id="navbar-logo" />
+        </a>
+        <ul>
+            <li><a href="/"><i class="fa fa-home"></i></a></li>
+            <li><a href="/market"><i class="fa fa-line-chart"></i></a></li>
+            <li><a href="/faq"><i class="fa fa-info"></i></a></li>
+            <li><a href="/account"><i class="fa fa-user"></i></a></li>
+        </ul>
+    </nav>
+    <div class="content">
+        <head>
+            <link rel="stylesheet" href="/static/styles/market.css">
+        </head>
+        <body>
+            <!-- Choose Between Search div and filter div -->
+            <div class="button-container">
+                <button id="show-search" onclick="marketShow()">Search</button>
+                <div class="line"></div>
+                <button id="show-filter" onclick="filterShow()">Filter</button>
+            </div>
 
-        </title>\n    
-        <link rel="stylesheet" href="/static/styles/login.css">\n  </head>\n  <body>\n    <img src="/static/assets/logo-small.jpeg" align="middle" id="logo" />\n    <form id="form" method="post">\n      <input class="but" type="text" name="username" placeholder="Email"><br>\n      <input class="but" type="password" name="password" placeholder="Password"><br>\n      <input id="login-but" type="submit" value="Login"><br>\n      \n        <p id="error-msg">Invalid username or password</p>\n    
-    \n      <label>Don\'t have an account yet?</label><br>\n    </form>\n    <br>\n    <a id="create-but" href="/create">Create Account</a>\n  </body>\n</html>' 
-    E            +  where b'<!-- Login page with option to create account -->\n<!doctype html>\n<html>\n  <head>\n    <title>Login</title>\n    <link rel="stylesheet" href="/static/styles/login.css">\n  </head>\n  <body>\n    <img src="/static/assets/logo-small.jpeg" align="middle" id="logo" />\n    <form id="form" method="post">\n      <input class="but" type="text" name="username" placeholder="Email"><br>\n      <input class="but" type="password" name="password" placeholder="Password"><br>\n      <input id="login-but" type="submit" value="Login"><br>\n      \n        <p id="error-msg">Invalid username or password</p>\n      \n    
-      <label>Don\'t have an account yet?</label><br>\n    </form>\n    <br>\n    <a id="create-but" href="/create">Create Account</a>\n  </body>\n</html>
+            <!-- Search Stock Page -->
+            <div class="market-container">
+                <form method="POST">
+                    <h2>Search for a stock</h2>
+                    <input type="text" id="stock_search" name="stock_search">
+                    <button type="submit" id="search-button" name="search-button" value="Submit" formaction="/search_stock?time=30">Search</button>
+                </form>
+
+                <!-- Line -->
+                <hr>
+
+                <!-- Container for stock info -->
+                <div id="stock-info" style="display: none;">
+                    <h2 id="search-symbol">None</h2>
+                    <p id="search-price">$</p>
+                    <p id="search-title"></p>
+                    <form class="show-search" method="POST">
+                        <input type="text" id="search-amount" name="search-amount" maxlength="6" size="4" value=1>
+                        <div class="search-buttons">
+                            <button id="buy-button" formaction="/buy_stock?from=search">Buy</button>
+                            <button id="sell-button" formaction="/sell_stock?from=search">Sell</button>
+                            <button id="search-button" formaction="/save_stock?from=search">Save</button>
+                        </div>
+                    </form>
+
+                    <!-- Depending on if chart variable is true, display chart.html -->
+                </div>
+
+                <!-- Display any errors or success if needed -->
+                <div class="search-errors">

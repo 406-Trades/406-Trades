@@ -219,6 +219,7 @@ class Transaction:
 
             # Get variables
             time = request.args.get('time')
+
             get_search = self.__render_search(symbol)
 
             # Booleans for hiding/showing divs
