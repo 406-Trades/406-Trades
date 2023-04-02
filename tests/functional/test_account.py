@@ -5,9 +5,9 @@ from flask import Flask, url_for, session, render_template, Blueprint
 from routes.report import Report
 from app import create_app, app
 
-from app import app
+from app import format_price
 
-app = create_app()
+app = Flask('testing')
 app.secret_key = '406-trades'
 app.debug = True
 
@@ -18,31 +18,24 @@ app.register_blueprint(report.generate_report_blueprint)
 
 @pytest.fixture
 def client():
-    app = create_app()
-    app.secret_key = '406-trades'
+    app.jinja_env.filters['price'] = format_price
 
-    app.config['TESTING'] = True
     with app.test_client() as client:
-        with app.app_context():
-            yield client
 
-    # with app.test_client() as client:
+        with client.session_transaction() as session:
+            session['username'] = 'Email@email.com'
 
-    #     with client.session_transaction() as session:
-    #         session['username'] = 'Email@email.com'
-
-    #     yield client
+        yield client
 
 # Testing report generation
-def test_generate_report(client):
-    with client.session_transaction() as session:
-        # with app.test_request_context():
+def test_generate_report(client):    
+    with app.app_context():
+        app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
 
-            response = client.get('/report', content_type='text', follow_redirects=True)
+        with client.session_transaction() as session:
+            session['username'] = 'Email@email.com'
 
-            # rendered_template = app.jinja_env.from_string(
-            #     '{{(b+i)|price}}').render()
+        response = client.get('/report')
 
-            assert response.status_code == 200
-            assert b'Saved' in response.data
-            # assert bytes(session.get('username'), encoding='utf8') in response.data
+        assert response.status_code == 200
+        assert bytes(session.get('username'), encoding='utf8') in response.data
