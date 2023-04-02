@@ -121,7 +121,7 @@ def create():
         return render_template('create.html')
 
 # Home Page
-@app.route("/home") 
+@app.route("/home", methods=["GET", "POST"]) 
 def home():
     # Checks if account is logged it or not
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
@@ -145,7 +145,7 @@ def market():
         return render_template('market.html', username=session['username'], companies={})
 
 # FAQ Page
-@app.route("/faq") 
+@app.route("/faq", methods=["GET", "POST"]) 
 def faq():
     # Checks if account is logged it or not
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
@@ -208,7 +208,7 @@ def account_settings():
 
 # Routes for Admin Pages
 # Admin Home Page
-@app.route('/admin')
+@app.route('/admin', methods=["GET", "POST"])
 def admin():
     if session['username'] == 'admin':
         allAccounts = accounts.find({'username': {'$ne': 'admin'}})

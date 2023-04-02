@@ -14,7 +14,7 @@
                 <div id="val">Account Value:<br><div class="value-acc">{{ (i+b)|price  }}</div></div>
                 <div class="inv-bal">
                     <div id="inv">Investments:<br><div class="value">{{ i|price  }}</div></div>
-                    <div id="bal">Balance:<br><div class="value">{{ b|price }}</div></div>
+                    <div id="bal">Balance:<br><div class="value bal">{{ b|price }}</div></div>
                 </div>
             </div>
 
@@ -22,8 +22,8 @@
             <form class="form" method="POST" action="{{ url_for('update_balance.update_balance', username=username, b=b) }}">
                 <label id="form-subtitle">Update Balance:</label>
                 <input class="form-input" type="text" id="amount" name="amount" placeholder="$0.00" size="6"><br>
-                <button id="inc-button" type="submit" name="submit-button" value="Increment">Increment Balance</button>
-                <button id="dec-button" type="submit" name="submit-button" value="Decrement">Decrement Balance</button>
+                <button id="inc-button" type="submit" name="submit" value="Increment">Increment Balance</button>
+                <button id="dec-button" type="submit" name="submit" value="Decrement">Decrement Balance</button>
                 {% if error == 'Exceeding Balance Funds' and error == 'Invalid Balance Input' %}
                     <p id="error-msg" style="color:red">{{ error }}</p>
                 {% endif %}

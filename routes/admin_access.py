@@ -32,10 +32,10 @@ class Admin_Access():
             allAccounts = self.accounts.find()
             if request.method == 'POST':
                 # Deletes account from DB
-                if request.form['submit-button'] == 'Delete':
+                if request.form['submit'] == 'Delete':
                     self.accounts.delete_one({'username': username})
                 # Update the account in MongoDB
-                elif request.form['submit-button'] == 'Save':
+                elif request.form['submit'] == 'Save':
                     self.accounts.update_one({'username': username}, {'$set': {
                         'username': request.form['username'],
                         'balance': float(request.form['balance']),
