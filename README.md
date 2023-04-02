@@ -16,6 +16,9 @@ Clone Repo:
 Run App:
 > py app.py
 
+Run Tests:
+> python -m pytest -vv
+
 ## Build
 Front-end developed with Flask framework, HTML, CSS.<br/>
 Back-end developed using python and Flask.<br/>
