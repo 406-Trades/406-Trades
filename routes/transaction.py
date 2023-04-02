@@ -310,12 +310,12 @@ class Transaction:
     # Get needed values for search page
     def __render_search(self, symbol):
         # Get upper symbol
-        symbol = symbol.upper()
+        symbol = symbol
 
         # Try to find the stock
         # If stock found, return values, otherwise return None
         try:
-            get_price = self.api.get_latest_trade(symbol.upper()).price
+            get_price = self.api.get_latest_trade(symbol).price
             get_name = self.api.get_asset(symbol).name
 
             return get_price, get_name
