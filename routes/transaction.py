@@ -192,6 +192,8 @@ class Transaction:
             # GET's User Data
             username = request.args.get('username')
             acc = Account(username)
+            price=0
+            name=""
 
             # Get variables to save the stock and show the page again
             symbol = request.args.get('symbol')
