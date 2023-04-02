@@ -15,6 +15,7 @@ Clone Repo:
 
 Run App:
 > py app.py
+Enter in browser: >http://127.0.0.1:5000/
 
 Run Tests:
 > python -m pytest -vv
