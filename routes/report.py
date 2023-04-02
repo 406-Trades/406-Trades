@@ -24,8 +24,6 @@ class Report():
         # Generate Report for User in session
         @self.generate_report_blueprint.route("/report", methods=['GET', 'POST'])
         def report():
-            print(session.get('username'))
-
             # Checks if account is logged it or not
             if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
                 return redirect(url_for('login'))
