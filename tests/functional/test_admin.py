@@ -70,6 +70,6 @@ def test_admin_edit_account():
         client.post('/login', data=dict(username='2@gmail.com', password='Abc123'))
         client.post('/login', data=dict(username='admin', password='admin'))
         acc = accounts.find_one({'username': '2@gmail.com'})
-        client.post('/edit_account?username=2%40gmail.com&id={}'.format(str(acc['_id'])), data=dict(username=acc['username'], investments=acc['investments'], stocks=str(acc['stocks']), saved=acc['saved'], balance='123', submit='Save'))
+        client.post('/edit_account?username=2@gmail.com&id={}'.format(str(acc['_id'])), data=dict(username=acc['username'], investments=acc['investments'], stocks=str(acc['stocks']), saved=acc['saved'], balance='123', submit='Save'))
         updated_acc = accounts.find_one({'username': '2@gmail.com'})
         assert updated_acc['balance'] == 123
