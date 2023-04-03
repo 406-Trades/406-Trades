@@ -36,21 +36,14 @@ class Admin_Access():
                     self.accounts.delete_one({'_id': ObjectId(id)})
                 # Update the account in MongoDB
                 elif request.form['submit'] == 'Save':
-                    print("ASD")
-                    # print(self.accounts.find_one({'_id': ObjectId(id)}))
-                    try:
-                        self.accounts.update_one({'_id': ObjectId(id)}, {'$set': {
-                            'username': request.form['username'],
-                            'balance': float(request.form['balance']),
-                            'investments': float(request.form['investments']),
-                            'stocks': json.loads(request.form['stocks'].replace("'", "\"")),
-                            'saved': request.form['saved'].strip('][').split(', ')
-                        }})
-                        print("Account updated successfully")
-                    except Exception as e:
-                        print("Error updating account:", e)
-            print(self.accounts.find_one({'_id': ObjectId(id)}))
-            allAccounts = self.accounts.find()
+                    self.accounts.update_one({'_id': ObjectId(id)}, {'$set': {
+                        'username': request.form['username'],
+                        'balance': float(request.form['balance']),
+                        'investments': float(request.form['investments']),
+                        'stocks': json.loads(request.form['stocks'].replace("'", "\"")),
+                        'saved': request.form['saved'].strip('][').split(', ')
+                    }})
+            allAccounts = self.accounts.find({'username': {'$ne': 'admin'}})
             return render_template('admin/admin_accounts.html', username=session['username'], allAccounts=allAccounts)
 
         # Admin Authenticate Stock
