@@ -31,7 +31,7 @@ def test_change_user():
         client.post('/login', data=dict(username='4@gmail.com', password='Abc123'))
         acc = accounts.find_one({'username': '4@gmail.com'})
         print(acc)
-        response = client.post('/account_settings?c=changeUsr', data=dict(username='42@gmail.com'))
+        response = client.post('/account_settings?c=changeUsr&oldUser=4@gmail.com', data=dict(username='42@gmail.com'))
         updated_acc = accounts.find_one({'username': '42@gmail.com'})
         print(updated_acc)
         assert b'Account Settings' in response.data
@@ -57,7 +57,7 @@ def test_change_password():
             session['username'] = '4@gmail.com'
         client.post('/create', data=dict(username='4@gmail.com', password='Abc123', passwordTwo='Abc123'))
         client.post('/login', data=dict(username='4@gmail.com', password='Abc123'))
-        response = client.post('/account_settings?c=changePass', data=dict(password='Abc123', passwordTwo='New123'))
+        response = client.post('/account_settings?c=changePass&oldUser=4@gmail.com', data=dict(password='Abc123', passwordTwo='New123'))
         assert b'Account Settings' in response.data
         acc = accounts.find_one({'username': '4@gmail.com'})
         assert acc['password'] == 'New123'

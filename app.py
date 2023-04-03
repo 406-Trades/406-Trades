@@ -93,6 +93,7 @@ def create():
         username = request.form['username']
         password = request.form['password']
         passwordTwo = request.form['passwordTwo']
+
         # Creates an Account object
         auth = Authentication(username, password, passwordTwo)
         # Validates credentials as 
@@ -180,11 +181,12 @@ def account_settings():
     if request.method == 'POST':
         # Change username
         c = request.args.get('c')
+        oldUser = request.args.get('oldUser')
         if 'changeUsr' == c:
             # Get the provided username and modify it
             username = request.form['username']
             if Authentication.new_user(username):
-                accounts.update_one({"username" : session['username']}, {"$set" : {"username" : username}})
+                accounts.update_one({"username" : oldUser}, {"$set" : {"username" : username}})
                 session['username'] = username
             else:
                 return render_template('account_settings.html', error='Invalid Username, must be a valid email address')
@@ -195,9 +197,9 @@ def account_settings():
             oldPass = request.form['password']
             newPass = request.form['passwordTwo']
             if Authentication.new_pass(newPass):
-                acc = accounts.find_one({'username': session['username']})
+                acc = accounts.find_one({'username': oldUser})
                 if acc["password"] == oldPass:
-                    accounts.update_one({"username" : session['username']}, {"$set" : {"password" : newPass}})
+                    accounts.update_one({"username" : oldUser}, {"$set" : {"password" : newPass}})
                 else:
                     return render_template('account_settings.html', error='Password is incorrect')
    

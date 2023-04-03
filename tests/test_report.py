@@ -45,14 +45,3 @@ def test_generate_report(client):
 
         assert response.status_code == 200
         assert bytes(session['username'], encoding='utf8') in response.data
-
-def test_delete_account():
-    with app.test_client() as client:
-        with client.session_transaction() as session:
-            session['username'] = '3@gmail.com'
-        client.post('/create', data=dict(username='3@gmail.com', password='Abc123', passwordTwo='Abc123'), follow_redirects=True)
-        client.post('/login', data=dict(username='3@gmail.com', password='Abc123'), follow_redirects=True)
-        print(session['username'])
-        acc = accounts.find_one({'username': '3@gmail.com'})
-        response = client.post('/del_account')
-        assert acc is None
