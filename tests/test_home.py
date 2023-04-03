@@ -42,6 +42,10 @@ def test_increment_balance():
         response = client.post('/update_balance?username=nikita2@gmail.com&b={}'.format(bal), data=dict(username='nikita2@gmail.com', password='Abc123', amount='100', submit='Increment'), follow_redirects=True)
         soup = BeautifulSoup(response.data, 'html.parser')
         account_value = str(soup.find('div', {'class': 'bal'}).text.strip())
+
+        acc = accounts.find_one({'username': 'nikita2@gmail.com'})
+        newBal = acc['balance']
+        assert newBal == (bal + 100)
         assert account_value.encode() in response.data
 
 def test_increment_balance_incorrect():
@@ -52,6 +56,10 @@ def test_increment_balance_incorrect():
         response = client.post('/update_balance?username=nikita2@gmail.com&b={}'.format(bal), data=dict(username='nikita2@gmail.com', password='Abc123', amount='ABC', submit='Increment'), follow_redirects=True)
         soup = BeautifulSoup(response.data, 'html.parser')
         account_value = str(soup.find('div', {'class': 'bal'}).text.strip())
+
+        acc = accounts.find_one({'username': 'nikita2@gmail.com'})
+        newBal = acc['balance']
+        assert newBal == bal
         assert account_value.encode() in response.data
 
 def test_decrement_balance():
@@ -62,4 +70,22 @@ def test_decrement_balance():
         response = client.post('/update_balance?username=nikita2@gmail.com&b={}'.format(bal), data=dict(username='nikita2@gmail.com', password='Abc123', amount='100', submit='Decrement'), follow_redirects=True)
         soup = BeautifulSoup(response.data, 'html.parser')
         account_value = soup.find('div', {'class': 'bal'}).text.strip()
+
+        acc = accounts.find_one({'username': 'nikita2@gmail.com'})
+        newBal = acc['balance']
+        assert newBal == (bal - 100)
+        assert account_value.encode() in response.data
+
+def test_decrement_balance_incorrect():
+    with app.test_client() as client:
+        acc = accounts.find_one({'username': 'nikita2@gmail.com'})
+        client.post('/login', data=dict(username='nikita2@gmail.com', password='Abc123'))
+        bal = acc['balance']
+        response = client.post('/update_balance?username=nikita2@gmail.com&b={}'.format(bal), data=dict(username='nikita2@gmail.com', password='Abc123', amount='ABC', submit='Decrement'), follow_redirects=True)
+        soup = BeautifulSoup(response.data, 'html.parser')
+        account_value = str(soup.find('div', {'class': 'bal'}).text.strip())
+
+        acc = accounts.find_one({'username': 'nikita2@gmail.com'})
+        newBal = acc['balance']
+        assert newBal == bal
         assert account_value.encode() in response.data
