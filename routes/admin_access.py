@@ -27,24 +27,29 @@ class Admin_Access():
         # Admin Edit/Delete Account / Stocks for all Accounts in DB
         @self.edit_account_blueprint.route('/edit_account', methods=['GET', 'POST'])
         def edit_account():
-            username = request.args.get('username')
+            # username = request.args.get('username')
             id = request.args.get('id')
-            account = self.accounts.find_one({'_id': ObjectId(id)})
+            # account = self.accounts.find_one({'_id': ObjectId(id)})
             if request.method == 'POST':
                 # Deletes account from DB
                 if request.form['submit'] == 'Delete':
                     self.accounts.delete_one({'_id': ObjectId(id)})
                 # Update the account in MongoDB
                 elif request.form['submit'] == 'Save':
-                    print(self.accounts.find_one({'_id': ObjectId(id)}))
-                    self.accounts.update_one({'_id': ObjectId(id)}, {'$set': {
-                        'username': request.form['username'],
-                        'balance': float(request.form['balance']),
-                        'investments': float(request.form['investments']),
-                        'stocks': json.loads(request.form['stocks'].replace("'", "\"")),
-                        'saved': request.form['saved'].strip('][').split(', ')
-                    }})
-            # print(self.accounts.find_one({'_id': ObjectId(id)}))
+                    print("ASD")
+                    # print(self.accounts.find_one({'_id': ObjectId(id)}))
+                    try:
+                        self.accounts.update_one({'_id': ObjectId(id)}, {'$set': {
+                            'username': request.form['username'],
+                            'balance': float(request.form['balance']),
+                            'investments': float(request.form['investments']),
+                            'stocks': json.loads(request.form['stocks'].replace("'", "\"")),
+                            'saved': request.form['saved'].strip('][').split(', ')
+                        }})
+                        print("Account updated successfully")
+                    except Exception as e:
+                        print("Error updating account:", e)
+            print(self.accounts.find_one({'_id': ObjectId(id)}))
             allAccounts = self.accounts.find()
             return render_template('admin/admin_accounts.html', username=session['username'], allAccounts=allAccounts)
 

@@ -67,13 +67,10 @@ def test_admin_delete_account():
     
 def test_admin_edit_account():
     with app.test_client() as client:
-        client.post('/create', data=dict(username='5@gmail.com', password='Abc123', passwordTwo='Abc123'))
-        client.post('/login', data=dict(username='5@gmail.com', password='Abc123'))
-        client.post('/login', data=dict(username='admin', password='admin'))
-        acc = accounts.find_one({'username': '5@gmail.com'})
-        print(acc)
-        response = client.post('/edit_account?username=5@gmail.com&id={}'.format(str(acc['_id'])), data=dict(username=acc['username'], investments=acc['investments'], stocks=str(acc['stocks']), saved=acc['saved'], balance='123', submit='Save'))
-        updated_acc = accounts.find_one({'username': '5@gmail.com'})
-        # print(updated_acc)
-        assert updated_acc['balance'] == 123
-        # client.post('/edit_account?username=5@gmail.com&id={}'.format(str(acc['_id'])), data=dict(username='5@gmail.com', submit='Delete'))
+        with app.test_client() as client:
+            client.post('/create', data=dict(username='5@gmail.com', password='Abc123', passwordTwo='Abc123'))
+            client.post('/login', data=dict(username='admin', password='admin'))
+            acc = accounts.find_one({'username': '5@gmail.com'})
+            response = client.post('/edit_account?id={}'.format(str(acc['_id'])), data=dict(username='5@gmail.com', investments=str(acc['investments']), stocks=str(acc['stocks']), saved=str(acc['saved']), balance='123', submit='Save'))
+            updated_acc = accounts.find_one({'username': '5@gmail.com'})
+            assert updated_acc['balance'] == 123.0
