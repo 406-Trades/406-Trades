@@ -1,9 +1,10 @@
-from flask import Flask, request, url_for, redirect, render_template, session
+from flask import Flask, request, url_for, redirect, render_template, session, Blueprint
 import pymongo
 from pymongo import MongoClient
 import json
 import alpaca_trade_api as tradeapi
 import classes.config as config
+import os
 
 # Imported Classes
 from classes.authentication import Authentication
@@ -43,6 +44,18 @@ accounts = db["Accounts"]
 # Session key
 app.secret_key = '406-trades'
 
+def create_app(test_config=None):
+    app.config.from_mapping(
+        SECRET_KEY='testing',
+        DATABASE=os.path.join(app.instance_path, 'stocks.sqlite'),
+    )
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
+    return app
+
 # Login Redirect Everytime User Opens The Website
 @app.route('/')
 def index():
@@ -80,6 +93,7 @@ def create():
         username = request.form['username']
         password = request.form['password']
         passwordTwo = request.form['passwordTwo']
+
         # Creates an Account object
         auth = Authentication(username, password, passwordTwo)
         # Validates credentials as 
@@ -108,7 +122,7 @@ def create():
         return render_template('create.html')
 
 # Home Page
-@app.route("/home") 
+@app.route("/home", methods=["GET", "POST"]) 
 def home():
     # Checks if account is logged it or not
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
@@ -132,7 +146,7 @@ def market():
         return render_template('market.html', username=session['username'], companies={})
 
 # FAQ Page
-@app.route("/faq") 
+@app.route("/faq", methods=["GET", "POST"]) 
 def faq():
     # Checks if account is logged it or not
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
@@ -141,7 +155,7 @@ def faq():
         return render_template('faq.html', username=session['username'])
 
 # Account Profile Page
-@app.route("/account") 
+@app.route("/account", methods=["GET", "POST"]) 
 def account():
     # Checks if account is logged it or not
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
@@ -150,15 +164,15 @@ def account():
         return render_template('account.html', username=session['username'])
 
 # Removes Session When User Logs Out
-@app.route('/logout')
+@app.route('/logout', methods=["GET", "POST"])
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
 # Delete Account from DB
-@app.route('/del_account')
+@app.route('/del_account', methods=["GET", "POST"])
 def del_account():
-    accounts.delete_one({"username" : session.get('username', None)})
+    accounts.delete_one({"username" : session['username']})
     return redirect(url_for('create'))
 
 # Update Customer Account Data
@@ -166,24 +180,26 @@ def del_account():
 def account_settings():
     if request.method == 'POST':
         # Change username
-        if 'changeUsr' in request.form:
+        c = request.args.get('c')
+        oldUser = request.args.get('oldUser')
+        if 'changeUsr' == c:
             # Get the provided username and modify it
             username = request.form['username']
             if Authentication.new_user(username):
-                accounts.update_one({"username" : session['username']}, {"$set" : {"username" : username}})
+                accounts.update_one({"username" : oldUser}, {"$set" : {"username" : username}})
                 session['username'] = username
             else:
                 return render_template('account_settings.html', error='Invalid Username, must be a valid email address')
 
         # Change password
-        elif 'changePass' in request.form:
+        elif 'changePass' == c:
             # Get the provided password and modify it
             oldPass = request.form['password']
             newPass = request.form['passwordTwo']
             if Authentication.new_pass(newPass):
-                acc = accounts.find_one({'username': session['username']})
+                acc = accounts.find_one({'username': oldUser})
                 if acc["password"] == oldPass:
-                    accounts.update_one({"username" : session['username']}, {"$set" : {"password" : newPass}})
+                    accounts.update_one({"username" : oldUser}, {"$set" : {"password" : newPass}})
                 else:
                     return render_template('account_settings.html', error='Password is incorrect')
    
@@ -195,7 +211,7 @@ def account_settings():
 
 # Routes for Admin Pages
 # Admin Home Page
-@app.route('/admin')
+@app.route('/admin', methods=["GET", "POST"])
 def admin():
     if session['username'] == 'admin':
         allAccounts = accounts.find({'username': {'$ne': 'admin'}})
@@ -204,9 +220,11 @@ def admin():
         return redirect(url_for('home', username=session['username']))
     
 # Round floats to 2 Decimals --> $XXXX.XX
-@app.template_filter('price')
+# @app.template_filter('price')
 def format_price(value):
     return f"${value:,.2f}"
+
+app.jinja_env.filters['price'] = format_price
 
 if __name__ == "__main__":
     app.run()

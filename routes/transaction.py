@@ -36,7 +36,7 @@ class Transaction:
             if amount > 0:
                 b = float(request.args.get('b'))
                 # Add money
-                if request.form['submit-button'] == 'Increment':
+                if request.form['submit'] == 'Increment':
                     acc.deposit(amount)
                 # Remove money
                 else:
