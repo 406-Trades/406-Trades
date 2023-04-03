@@ -179,7 +179,8 @@ def del_account():
 def account_settings():
     if request.method == 'POST':
         # Change username
-        if 'changeUsr' in request.form:
+        c = request.args.get('c')
+        if 'changeUsr' == c:
             # Get the provided username and modify it
             username = request.form['username']
             if Authentication.new_user(username):
@@ -189,7 +190,7 @@ def account_settings():
                 return render_template('account_settings.html', error='Invalid Username, must be a valid email address')
 
         # Change password
-        elif 'changePass' in request.form:
+        elif 'changePass' == c:
             # Get the provided password and modify it
             oldPass = request.form['password']
             newPass = request.form['passwordTwo']
