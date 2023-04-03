@@ -58,7 +58,7 @@ def test_home_buy_sq(client):
             newBal = acc['balance']
 
             assert response.status_code == 200
-            assert expectedBal == newBal
+            assert int(expectedBal) == int(newBal)
             assert bytes(aSymbol, encoding='utf8') in response.data
 
 
@@ -82,7 +82,7 @@ def test_buy(client):
             newBal = acc['balance']
 
             assert response.status_code == 200
-            assert expectedBal == newBal
+            assert int(expectedBal) == int(newBal)
             assert bytes(aSymbol, encoding='utf8') in response.data
 
 # Testing stock sale from search
@@ -105,5 +105,5 @@ def test_sell(client):
             newBal = acc['balance']
 
             assert response.status_code == 200
-            assert expectedBal == newBal
+            assert int(expectedBal) == int(newBal)
             assert bytes(aSymbol, encoding='utf8') in response.data
