@@ -44,24 +44,28 @@ def test_generate_report(client):
         response = client.get('/report')
 
         assert response.status_code == 200
-        assert bytes(session.get('username'), encoding='utf8') in response.data
+        assert bytes(session['username'], encoding='utf8') in response.data
 
 def test_delete_account():
     with app.test_client() as client:
-        client.post('/create', data=dict(username='1@gmail.com', password='Abc123', passwordTwo='Abc123'))
-        client.post('/login', data=dict(username='1@gmail.com', password='Abc123'))
-        client.post('/login', data=dict(username='admin', password='admin'))
-        acc = accounts.find_one({'username': '1@gmail.com'})
-        response = client.post('/edit_account?username=1@gmail.com&id={}'.format(str(acc['_id'])), data=dict(username='1@gmail.com', submit='Delete'))
-        assert response.status_code == 200
-        assert accounts.find_one({'username': '1@gmail.com'}) is None
-    
-def test_edit_account():
-    with app.test_client() as client:
-        client.post('/create', data=dict(username='2@gmail.com', password='Abc123', passwordTwo='Abc123'))
-        client.post('/login', data=dict(username='2@gmail.com', password='Abc123'))
-        client.post('/login', data=dict(username='admin', password='admin'))
-        acc = accounts.find_one({'username': '2@gmail.com'})
-        client.post('/edit_account?username=2%40gmail.com&id={}'.format(str(acc['_id'])), data=dict(username=acc['username'], investments=acc['investments'], stocks=str(acc['stocks']), saved=acc['saved'], balance='123', submit='Save'))
-        updated_acc = accounts.find_one({'username': '2@gmail.com'})
-        assert updated_acc['balance'] == 123
+        with client.session_transaction() as session:
+            session['username'] = '3@gmail.com'
+        client.post('/create', data=dict(username='3@gmail.com', password='Abc123', passwordTwo='Abc123'), follow_redirects=True)
+        client.post('/login', data=dict(username='3@gmail.com', password='Abc123'), follow_redirects=True)
+        print(session['username'])
+        acc = accounts.find_one({'username': '3@gmail.com'})
+        response = client.post('/del_account')
+        assert acc is None
+        
+# def test_edit_account():
+#     with app.test_client() as client:
+#         client.post('/create', data=dict(username='4@gmail.com', password='Abc123', passwordTwo='Abc123'))
+#         client.post('/login', data=dict(username='4@gmail.com', password='Abc123'))
+#         client.post('/login', data=dict(username='admin', password='admin'))
+#         acc = accounts.find_one({'username': '4@gmail.com'})
+#         print(acc)
+#         response = client.post('/edit_account?username=4@gmail.com&id={}'.format(str(acc['_id'])), data=dict(username=acc['username'], investments=acc['investments'], stocks=str(acc['stocks']), saved=acc['saved'], balance='123', submit='Save'))
+#         updated_acc = accounts.find_one({'username': '4@gmail.com'})
+#         # print(updated_acc)
+#         assert updated_acc['balance'] == 123
+#         # client.post('/edit_account?username=4@gmail.com&id={}'.format(str(acc['_id'])), data=dict(username='4@gmail.com', submit='Delete'))

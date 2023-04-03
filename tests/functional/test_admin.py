@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import pymongo
 from pymongo import MongoClient
 from unittest.mock import patch
+import time
 
 # Accounts DB
 cluster = MongoClient("mongodb+srv://Abhari:Abhari@cluster0.pqgawmw.mongodb.net/?retryWrites=true&w=majority")
@@ -66,10 +67,13 @@ def test_admin_delete_account():
     
 def test_admin_edit_account():
     with app.test_client() as client:
-        client.post('/create', data=dict(username='2@gmail.com', password='Abc123', passwordTwo='Abc123'))
-        client.post('/login', data=dict(username='2@gmail.com', password='Abc123'))
+        client.post('/create', data=dict(username='5@gmail.com', password='Abc123', passwordTwo='Abc123'))
+        client.post('/login', data=dict(username='5@gmail.com', password='Abc123'))
         client.post('/login', data=dict(username='admin', password='admin'))
-        acc = accounts.find_one({'username': '2@gmail.com'})
-        client.post('/edit_account?username=2%40gmail.com&id={}'.format(str(acc['_id'])), data=dict(username=acc['username'], investments=acc['investments'], stocks=str(acc['stocks']), saved=acc['saved'], balance='123', submit='Save'))
-        updated_acc = accounts.find_one({'username': '2@gmail.com'})
+        acc = accounts.find_one({'username': '5@gmail.com'})
+        print(acc)
+        response = client.post('/edit_account?username=5@gmail.com&id={}'.format(str(acc['_id'])), data=dict(username=acc['username'], investments=acc['investments'], stocks=str(acc['stocks']), saved=acc['saved'], balance='123', submit='Save'))
+        updated_acc = accounts.find_one({'username': '5@gmail.com'})
+        # print(updated_acc)
         assert updated_acc['balance'] == 123
+        # client.post('/edit_account?username=5@gmail.com&id={}'.format(str(acc['_id'])), data=dict(username='5@gmail.com', submit='Delete'))

@@ -29,14 +29,14 @@ class Admin_Access():
         def edit_account():
             username = request.args.get('username')
             id = request.args.get('id')
-            account = self.db.accounts.find_one({'_id': ObjectId(id)})
-            allAccounts = self.accounts.find()
+            account = self.accounts.find_one({'_id': ObjectId(id)})
             if request.method == 'POST':
                 # Deletes account from DB
                 if request.form['submit'] == 'Delete':
                     self.accounts.delete_one({'_id': ObjectId(id)})
                 # Update the account in MongoDB
                 elif request.form['submit'] == 'Save':
+                    print(self.accounts.find_one({'_id': ObjectId(id)}))
                     self.accounts.update_one({'_id': ObjectId(id)}, {'$set': {
                         'username': request.form['username'],
                         'balance': float(request.form['balance']),
@@ -44,6 +44,8 @@ class Admin_Access():
                         'stocks': json.loads(request.form['stocks'].replace("'", "\"")),
                         'saved': request.form['saved'].strip('][').split(', ')
                     }})
+            # print(self.accounts.find_one({'_id': ObjectId(id)}))
+            allAccounts = self.accounts.find()
             return render_template('admin/admin_accounts.html', username=session['username'], allAccounts=allAccounts)
 
         # Admin Authenticate Stock

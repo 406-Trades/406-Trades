@@ -154,7 +154,7 @@ def faq():
         return render_template('faq.html', username=session['username'])
 
 # Account Profile Page
-@app.route("/account") 
+@app.route("/account", methods=["GET", "POST"]) 
 def account():
     # Checks if account is logged it or not
     if not ('username' in session and session['username'] is not None and len(session['username']) > 0):
@@ -163,15 +163,15 @@ def account():
         return render_template('account.html', username=session['username'])
 
 # Removes Session When User Logs Out
-@app.route('/logout')
+@app.route('/logout', methods=["GET", "POST"])
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
 # Delete Account from DB
-@app.route('/del_account')
+@app.route('/del_account', methods=["GET", "POST"])
 def del_account():
-    accounts.delete_one({"username" : session.get('username', None)})
+    accounts.delete_one({"username" : session['username']})
     return redirect(url_for('create'))
 
 # Update Customer Account Data
