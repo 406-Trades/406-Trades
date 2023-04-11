@@ -16,6 +16,14 @@ Clone Repo:
 Run App:
 > py app.py
 
+Enter in browser: 
+>http://127.0.0.1:5000/
+
+Run Tests:
+> pip install pytest
+
+> python -m pytest -vv
+
 ## Build
 Front-end developed with Flask framework, HTML, CSS.<br/>
 Back-end developed using python and Flask.<br/>
@@ -30,6 +38,16 @@ Professional and responsive flask CRUD app built with python, Alpaca API, and Mo
 ![Classes](/static/assets/Updated_Class_Diagram.png)
 
 ## Visuals
+### Login / Create Account Page
+![Classes](/static/assets/Create.JPG)
+### Home Page
+![Classes](/static/assets/Home.JPG)
+### Market Page
+![Classes](/static/assets/Market.JPG)
+### Account Page
+![Classes](/static/assets/Account.JPG)
+### Admin Page
+![Classes](/static/assets/Admin.JPG)
 
 ## References
 https://alpaca.markets/docs/<br/>

@@ -4,6 +4,7 @@ import alpaca_trade_api as tradeapi
 import classes.config as config
 import pymongo
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 import json
 import requests
 
@@ -26,24 +27,24 @@ class Admin_Access():
         # Admin Edit/Delete Account / Stocks for all Accounts in DB
         @self.edit_account_blueprint.route('/edit_account', methods=['GET', 'POST'])
         def edit_account():
-            username = request.args.get('username')
+            # username = request.args.get('username')
             id = request.args.get('id')
-            account = self.db.accounts.find_one({'username': username})
-            allAccounts = self.accounts.find()
+            # account = self.accounts.find_one({'_id': ObjectId(id)})
             if request.method == 'POST':
                 # Deletes account from DB
-                if request.form['submit-button'] == 'Delete':
-                    self.accounts.delete_one({'username': username})
+                if request.form['submit'] == 'Delete':
+                    self.accounts.delete_one({'_id': ObjectId(id)})
                 # Update the account in MongoDB
-                elif request.form['submit-button'] == 'Save':
-                    self.accounts.update_one({'username': username}, {'$set': {
+                elif request.form['submit'] == 'Save':
+                    self.accounts.update_one({'_id': ObjectId(id)}, {'$set': {
                         'username': request.form['username'],
                         'balance': float(request.form['balance']),
                         'investments': float(request.form['investments']),
                         'stocks': json.loads(request.form['stocks'].replace("'", "\"")),
                         'saved': request.form['saved'].strip('][').split(', ')
                     }})
-                return render_template('admin/admin_accounts.html', username=session['username'], allAccounts=allAccounts)
+            allAccounts = self.accounts.find({'username': {'$ne': 'admin'}})
+            return render_template('admin/admin_accounts.html', username=session['username'], allAccounts=allAccounts)
 
         # Admin Authenticate Stock
         @self.stock_authenticate_blueprint.route('/stock_authenticate', methods=['POST'])

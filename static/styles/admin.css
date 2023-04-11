@@ -10,6 +10,10 @@ table {
     color: #333;
     border-collapse: collapse;
     width: 60%;
+    width: 100%;
+    table-layout: fixed;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
     margin: 0 auto;
     background-color: white;
 }
