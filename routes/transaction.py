@@ -36,7 +36,7 @@ class Transaction:
             if amount > 0:
                 b = float(request.args.get('b'))
                 # Add money
-                if request.form['submit'] == 'Increment':
+                if request.form['submit-button'] == 'Increment':
                     acc.deposit(amount)
                 # Remove money
                 else:
@@ -72,17 +72,9 @@ class Transaction:
             # Set variables based on if the purchase is from filter or search
             if source == 'filter':
                 shares = int(request.form['filter-amount'])
-                try:
-                    shares = int(request.form['filter-amount'])
-                except:
-                    shares = -1
                 companies = self.__render_filter(exchange)
             elif source == 'search':
                 shares = int(request.form['search-amount'])
-                try:
-                    shares = int(request.form['search-amount'])
-                except:
-                    shares = -1
                 isSearch = True
                 showStock = True
                 companies = {}
@@ -156,17 +148,10 @@ class Transaction:
 
             # Set variables based on if the purchase is from filter or search
             if source == 'filter':
-                try:
-                    shares = int(request.form['filter-amount'])
-                except:
-                    shares = -1
+                shares = int(request.form['filter-amount'])
                 companies = self.__render_filter(exchange)
             elif source == 'search':
                 shares = int(request.form['search-amount'])
-                try:
-                    shares = int(request.form['search-amount'])
-                except:
-                    shares = -1
                 showStock = True
                 isSearch = True
                 companies = {}
@@ -192,8 +177,6 @@ class Transaction:
             # GET's User Data
             username = request.args.get('username')
             acc = Account(username)
-            price=0
-            name=""
 
             # Get variables to save the stock and show the page again
             symbol = request.args.get('symbol')
