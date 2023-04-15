@@ -8,14 +8,25 @@
         <title>FAQ Page</title>
         <style>
             .bubble {
+                position: relative;
+                display: inline-block;
                 background-color: #f0f0f0;
                 padding: 10px;
                 border-radius: 15px;
-                margin: 0 auto;
-                margin-top: 100px;
-                max-width:1050px;
+                margin-bottom: 20px;
+                margin-right: 20px;
             }
-
+            
+            .bubble:after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                right: -10px;
+                margin-top: -10px;
+                border-style: solid;
+                border-width: 10px 0 10px 10px;
+                border-color: transparent transparent transparent #f0f0f0;
+            }
             
             h1 {
                 text-align: center; /* center the FAQ header */

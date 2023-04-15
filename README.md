@@ -3,7 +3,7 @@ Prototype 2
 
 ## Setup
 Pre-reqs:
-Have python installed. (type python in terminal to check)
+Have python installed. (type py in terminal to check)
 > pip install pymongo
 
 > pip install -U Flask
@@ -15,14 +15,6 @@ Clone Repo:
 
 Run App:
 > py app.py
-
-Enter in browser: 
->http://127.0.0.1:5000/
-
-Run Tests:
-> pip install pytest
-
-> python -m pytest -vv
 
 ## Build
 Front-end developed with Flask framework, HTML, CSS.<br/>
