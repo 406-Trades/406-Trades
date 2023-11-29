@@ -31,15 +31,15 @@ Professional and responsive flask CRUD app built with python, Alpaca API, and Mo
 
 ## Visuals
 ### Login / Create Account Page
-![Create](/static/assets/Create.JPG)
+![Create](/static/assets/Create.jpg)
 ### Home Page
-![Home](/static/assets/Home.JPG)
+![Home](/static/assets/Home.jpg)
 ### Market Page
-![Market](/static/assets/Market.JPG)
+![Market](/static/assets/Market.jpg)
 ### Account Page
-![Account](/static/assets/Account.JPG)
+![Account](/static/assets/Account.jpg)
 ### Admin Page
-![Admin](/static/assets/Admin.JPG)
+![Admin](/static/assets/Admin.jpg)
 
 ## References
 https://alpaca.markets/docs/<br/>
