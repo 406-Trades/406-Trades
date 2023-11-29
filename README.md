@@ -28,7 +28,7 @@ Professional and responsive flask CRUD app built with python, Alpaca API, and Mo
 
 ## Class Diagram
 ![Classes](/static/assets/Updated_Class_Diagram.png)
-<!-- 
+
 ## Visuals
 ### Login / Create Account Page
 ![Classes](/static/assets/Create.JPG)
@@ -39,7 +39,7 @@ Professional and responsive flask CRUD app built with python, Alpaca API, and Mo
 ### Account Page
 ![Classes](/static/assets/Account.JPG)
 ### Admin Page
-![Classes](/static/assets/Admin.JPG) -->
+![Classes](/static/assets/Admin.JPG)
 
 ## References
 https://alpaca.markets/docs/<br/>
